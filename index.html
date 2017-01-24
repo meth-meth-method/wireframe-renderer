@@ -1,6 +1,86 @@
 <html>
 <body>
     <canvas width="800" height="600" style="image-rendering: pixelated;"></canvas>
+
+    <fieldset>
+        <legend>Position</legend>
+
+        <label>
+            X <input name="pos-x" type="range" min="-50" max="50" step="1" value="0" />
+        </label>
+
+        <label>
+            Y <input name="pos-y" type="range" min="-50" max="50" step="1" value="0" />
+        </label>
+
+        <label>
+            Z <input name="pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Rotation</legend>
+
+        <label>
+            X <input name="rotate-x" type="range" min="0" max="3600" step="1" value="0" />
+        </label>
+
+        <label>
+            Y <input name="rotate-y" type="range" min="0" max="3600" step="1" value="0" />
+        </label>
+
+        <label>
+            Z <input name="rotate-z" type="range" min="0" max="3600" step="1" value="0" />
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Scale</legend>
+
+        <label>
+            X <input name="scale-x" type="range" min="0" max="10" step=".1" value="1" />
+        </label>
+
+        <label>
+            Y <input name="scale-y" type="range" min="0" max="10" step=".1" value="1" />
+        </label>
+
+        <label>
+            Z <input name="scale-z" type="range" min="0" max="10" step=".1" value="1" />
+        </label>
+    </fieldset>
+
+    <fieldset>
+        <legend>Camera</legend>
+
+        <label>
+            FOV <input name="fov" type="range" min="1" max="180" step="1" value="100" />
+        </label>
+    </fieldset>
+
     <script type="text/javascript" src="main.js"></script>
+
+    <script type="text/javascript">
+        function bind(name, onChange) {
+            const input = document.querySelector(`[name=${name}]`);
+            input.addEventListener('input', (event) => {
+                onChange(parseFloat(event.target.value));
+            });
+        }
+
+        bind('rotate-x', val => model.rotate.x = val / 360);
+        bind('rotate-y', val => model.rotate.y = val / 360);
+        bind('rotate-z', val => model.rotate.z = val / 360);
+
+        bind('scale-x', val => model.scale.x = val);
+        bind('scale-y', val => model.scale.y = val);
+        bind('scale-z', val => model.scale.z = val);
+
+        bind('pos-x', val => model.pos.x = val);
+        bind('pos-y', val => model.pos.y = val);
+        bind('pos-z', val => model.pos.z = val);
+
+        bind('fov', val => camera.fov = val);
+    </script>
 </body>
 </html>
