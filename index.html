@@ -1,4 +1,17 @@
 <html>
+<head>
+    <style type="text/css">
+        body {
+            background: #000;
+            color: #e0e0e0;
+            font-family: sans-serif;
+        }
+
+        fieldset {
+            border: none;
+        }
+    </style>
+</head>
 <body>
     <canvas width="800" height="600" style="image-rendering: pixelated;"></canvas>
 
@@ -56,6 +69,46 @@
         <label>
             FOV <input name="fov" type="range" min="1" max="180" step="1" value="100" />
         </label>
+
+        <fieldset>
+            <legend>Position</legend>
+
+            <label>
+                X <input name="camera-pos-x" type="range" min="-50" max="50" step="1" value="0" />
+            </label>
+
+            <label>
+                Y <input name="camera-pos-y" type="range" min="-50" max="50" step="1" value="0" />
+            </label>
+
+            <label>
+                Z <input name="camera-pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
+            </label>
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>Light</legend>
+
+        <fieldset>
+            <legend>Ambient</legend>
+
+            <label>
+                R <input name="ambient-light-r" type="range" min="0" max="1" step=".01" value="1" />
+            </label>
+
+            <label>
+                G <input name="ambient-light-g" type="range" min="0" max="1" step=".01" value="1" />
+            </label>
+
+            <label>
+                B <input name="ambient-light-b" type="range" min="0" max="1" step=".01" value="1" />
+            </label>
+
+            <label>
+                Intensity <input name="ambient-light-a" type="range" min="0" max="1" step=".01" value="1" />
+            </label>
+        </fieldset>
     </fieldset>
 
     <script type="text/javascript" src="main.js"></script>
@@ -79,6 +132,15 @@
         bind('pos-x', val => model.pos.x = val);
         bind('pos-y', val => model.pos.y = val);
         bind('pos-z', val => model.pos.z = val);
+
+        bind('ambient-light-r', val => ambientLight.r = val);
+        bind('ambient-light-g', val => ambientLight.g = val);
+        bind('ambient-light-b', val => ambientLight.b = val);
+        bind('ambient-light-a', val => ambientLight.a = val);
+
+        bind('camera-pos-x', val => camera.pos.x = val);
+        bind('camera-pos-y', val => camera.pos.y = val);
+        bind('camera-pos-z', val => camera.pos.z = val);
 
         bind('fov', val => camera.fov = val);
     </script>

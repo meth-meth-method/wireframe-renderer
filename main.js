@@ -60,6 +60,17 @@ class Object3d
     }
 }
 
+class Light extends Vertex {
+}
+
+class Camera extends Object3d
+{
+    constructor() {
+        super();
+        this.fov = 90;
+    }
+}
+
 class Model extends Object3d
 {
     constructor(faces) {
@@ -159,6 +170,18 @@ function drawTriangle(triangle) {
         const bStep = (end.b - start.b) / len;
         let bPos = start.b;
 
+        const aStep = (end.a - start.a) / len;
+        let aPos = start.a;
+
+        const nxStep = (end.nx - start.nx) / len;
+        let nxPos = start.nx;
+
+        const nyStep = (end.ny - start.ny) / len;
+        let nyPos = start.ny;
+
+        const nzStep = (end.nz - start.nz) / len;
+        let nzPos = start.nz;
+
         while (yPos < yEnd) {
             const x = Math.ceil(xPos - 0.5);
 
@@ -176,9 +199,14 @@ function drawTriangle(triangle) {
 
                 spans[yPos].edges.push(new Edge({
                     x: x,
+                    z: zPos,
+                    nx: nxPos,
+                    ny: nyPos,
+                    nz: nzPos,
                     r: rPos,
                     g: gPos,
-                    z: zPos,
+                    b: bPos,
+                    a: aPos,
                 }));
             }
 
@@ -187,10 +215,16 @@ function drawTriangle(triangle) {
             rPos += rStep;
             gPos += gStep;
             bPos += bStep;
+            aPos += aStep;
+            nxPos += nxStep;
+            nyPos += nyStep;
+            nzPos += nzStep;
         }
     }
 
     function drawSpans() {
+        const depthBuffer = new Array(canvas.width * canvas.height).fill(Infinity);
+
         for (let y = firstSpanLine; y <= lastSpanLine; ++y) {
             if (spans[y].edges.length === 2) {
                 let edge1 = spans[y].leftEdge;
@@ -201,10 +235,14 @@ function drawTriangle(triangle) {
                 let pos = 0;
 
                 for (let x = edge1.x; x < edge2.x; ++x) {
-                  let r = edge1.r + (edge2.r - edge1.r) * pos;
-                  let g = edge1.g + (edge2.g - edge1.g) * pos;
-                  let b = edge1.b + (edge2.b - edge1.b) * pos;
-                  const a = edge1.a + (edge2.a - edge1.a) * pos;
+                    let r = edge1.r + (edge2.r - edge1.r) * pos;
+                    let g = edge1.g + (edge2.g - edge1.g) * pos;
+                    let b = edge1.b + (edge2.b - edge1.b) * pos;
+                    const a = edge1.a + (edge2.a - edge1.a) * pos;
+
+                    let nx = edge1.nx + (edge2.nx - edge1.nx) * pos;
+                    let ny = edge1.ny + (edge2.ny - edge1.ny) * pos;
+                    let nz = edge1.nz + (edge2.nz - edge1.nz) * pos;
 
                   /* The depth buffer makes sure that a triangle that is further away
                      does not obscure a triangle that is closer to the camera. This is
@@ -214,39 +252,31 @@ function drawTriangle(triangle) {
                      We only draw the pixel if no "nearer" pixel has yet been drawn.
                      (This is also a feature that Metal provides for you already.) */
                   /*var shouldDrawPixel = true
-                  if useDepthBuffer {
+
+                  */
+
+                  let shouldDrawPixel = true;
+                  if (useDepthBuffer) {
                     let z = edge1.z + (edge2.z - edge1.z) * pos
-                    let offset = x + y * Int(context!.width)
-                    if depthBuffer[offset] > z {
+                    let offset = x + y * canvas.width;
+                    if (depthBuffer[offset] > z) {
                       depthBuffer[offset] = z
                     } else {
                       shouldDrawPixel = false
                     }
                   }
-                  */
 
-                  /* Also interpolate the normal vector. Note that for many triangles
-                     in the cube, all three vertices have the same normal vector. So
-                     all pixels in such a triangle get identical normal vectors. But
-                     this is not a requirement: I've also included a triangle whose
-                     vertices have different normal vectors, giving it a more "rounded"
-                     look. */
-                  /*let nx = edge1.nx + (edge2.nx - edge1.nx) * pos
-                  let ny = edge1.ny + (edge2.ny - edge1.ny) * pos
-                  let nz = edge1.nz + (edge2.nz - edge1.nz) * pos
-                  */
-                  const shouldDrawPixel = true;
                   if (shouldDrawPixel) {
-                    /*
-                    const factor = Math.min(Math.max(0, -1*(nx*diffuseX + ny*diffuseY + nz*diffuseZ)), 1);
 
-                    r *= (ambientR*ambientIntensity + factor*diffuseR*diffuseIntensity)
-                    g *= (ambientG*ambientIntensity + factor*diffuseG*diffuseIntensity)
-                    b *= (ambientB*ambientIntensity + factor*diffuseB*diffuseIntensity)
+                    const factor = Math.min(Math.max(0, -1 * (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z)), 1);
 
-                    r = max(min(r, 1), 0)   // clamp the colors
-                    g = max(min(g, 1), 0)   // so they don't
-                    b = max(min(b, 1), 0)   // become too bright*/
+                    r *= (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
+                    g *= (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a)
+                    b *= (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a)
+
+                    r = Math.max(Math.min(r, 1), 0);
+                    g = Math.max(Math.min(g, 1), 0);
+                    b = Math.max(Math.min(b, 1), 0);
                     setPixel(x, y, r * 255, g * 255, b * 255, a * 255);
                   }
 
@@ -336,11 +366,11 @@ function transformAndProject(model) {
             v.x /= (v.z + camera.fov) * (1 / camera.fov);
             v.y /= (v.z + camera.fov) * (1 / camera.fov);
 
-            v.x *= 600 / 80;
-            v.y *= 600 / 80;
+            v.x *= canvas.height / 80;
+            v.y *= canvas.height / 80;
 
-            v.x += 800 / 2;
-            v.y += 800 / 2;
+            v.x += canvas.width / 2;
+            v.y += canvas.height / 2;
 
             return v;
         }))
@@ -361,9 +391,11 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 let image;
 
+let useDepthBuffer = true;
 const model = createModel();
-const camera = new Object3d();
-camera.fov = 100;
+const camera = new Camera();
+const ambientLight = new Light({r: 1, g: 1, b: 1, a: .2});
+const diffuseLight = new Light({r: 1, g: 1, b: 1, a: .8, z: 1});
 
 function loop() {
     clear();
