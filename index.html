@@ -1,116 +1,157 @@
 <html>
 <head>
+    <title>JS Software 3D Rasterizer</title>
     <style type="text/css">
         body {
             background: #000;
             color: #e0e0e0;
             font-family: sans-serif;
+            font-size: 10px;
+        }
+
+        canvas {
+            border: solid 1px #fff;
+            margin: 1em;
+        }
+
+        .controls {
+            display: flex;
+            flex-flow: row wrap;
         }
 
         fieldset {
             border: none;
+            display: flex;
+        }
+
+        label {
+            align-items: center;
+            display: flex;
         }
     </style>
 </head>
 <body>
     <canvas width="800" height="600" style="image-rendering: pixelated;"></canvas>
 
-    <fieldset>
-        <legend>Position</legend>
-
-        <label>
-            X <input name="pos-x" type="range" min="-50" max="50" step="1" value="0" />
-        </label>
-
-        <label>
-            Y <input name="pos-y" type="range" min="-50" max="50" step="1" value="0" />
-        </label>
-
-        <label>
-            Z <input name="pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
-        </label>
-    </fieldset>
-
-    <fieldset>
-        <legend>Rotation</legend>
-
-        <label>
-            X <input name="rotate-x" type="range" min="0" max="3600" step="1" value="0" />
-        </label>
-
-        <label>
-            Y <input name="rotate-y" type="range" min="0" max="3600" step="1" value="0" />
-        </label>
-
-        <label>
-            Z <input name="rotate-z" type="range" min="0" max="3600" step="1" value="0" />
-        </label>
-    </fieldset>
-
-    <fieldset>
-        <legend>Scale</legend>
-
-        <label>
-            X <input name="scale-x" type="range" min="0" max="10" step=".1" value="1" />
-        </label>
-
-        <label>
-            Y <input name="scale-y" type="range" min="0" max="10" step=".1" value="1" />
-        </label>
-
-        <label>
-            Z <input name="scale-z" type="range" min="0" max="10" step=".1" value="1" />
-        </label>
-    </fieldset>
-
-    <fieldset>
-        <legend>Camera</legend>
-
-        <label>
-            FOV <input name="fov" type="range" min="1" max="180" step="1" value="100" />
-        </label>
-
+    <section class="controls">
         <fieldset>
             <legend>Position</legend>
 
             <label>
-                X <input name="camera-pos-x" type="range" min="-50" max="50" step="1" value="0" />
+                X <input name="pos-x" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label>
-                Y <input name="camera-pos-y" type="range" min="-50" max="50" step="1" value="0" />
+                Y <input name="pos-y" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label>
-                Z <input name="camera-pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
+                Z <input name="pos-z" type="range" min="-3000" max="0" step="1" value="0" />
             </label>
         </fieldset>
-    </fieldset>
-
-    <fieldset>
-        <legend>Light</legend>
 
         <fieldset>
-            <legend>Ambient</legend>
+            <legend>Rotation</legend>
 
             <label>
-                R <input name="ambient-light-r" type="range" min="0" max="1" step=".01" value="1" />
+                X <input name="rotate-x" type="range" min="-3600" max="3600" step="1" value="0" />
             </label>
 
             <label>
-                G <input name="ambient-light-g" type="range" min="0" max="1" step=".01" value="1" />
+                Y <input name="rotate-y" type="range" min="-3600" max="3600" step="1" value="0" />
             </label>
 
             <label>
-                B <input name="ambient-light-b" type="range" min="0" max="1" step=".01" value="1" />
-            </label>
-
-            <label>
-                Intensity <input name="ambient-light-a" type="range" min="0" max="1" step=".01" value="1" />
+                Z <input name="rotate-z" type="range" min="-3600" max="3600" step="1" value="0" />
             </label>
         </fieldset>
-    </fieldset>
 
+        <fieldset>
+            <legend>Scale</legend>
+
+            <label>
+                X <input name="scale-x" type="range" min="0" max="10" step=".1" value="1" />
+            </label>
+
+            <label>
+                Y <input name="scale-y" type="range" min="0" max="10" step=".1" value="1" />
+            </label>
+
+            <label>
+                Z <input name="scale-z" type="range" min="0" max="10" step=".1" value="1" />
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Camera</legend>
+
+            <label>
+                FOV <input name="fov" type="range" min="1" max="180" step="1" value="100" />
+            </label>
+
+            <fieldset>
+                <legend>Position</legend>
+
+                <label>
+                    X <input name="camera-pos-x" type="range" min="-50" max="50" step="1" value="0" />
+                </label>
+
+                <label>
+                    Y <input name="camera-pos-y" type="range" min="-50" max="50" step="1" value="0" />
+                </label>
+
+                <label>
+                    Z <input name="camera-pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
+                </label>
+            </fieldset>
+        </fieldset>
+
+        <fieldset>
+            <legend>Light</legend>
+
+            <fieldset>
+                <legend>Ambient</legend>
+
+                <label>
+                    R <input name="ambient-light-r" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    G <input name="ambient-light-g" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    B <input name="ambient-light-b" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    Intensity <input name="ambient-light-a" type="range" min="0" max="1" step=".01" value=".2" />
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Diffuse</legend>
+
+                <label>
+                    R <input name="diffuse-light-r" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    G <input name="diffuse-light-g" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    B <input name="diffuse-light-b" type="range" min="0" max="1" step=".01" value="1" />
+                </label>
+
+                <label>
+                    Intensity <input name="diffuse-light-a" type="range" min="0" max="1" step=".01" value=".8" />
+                </label>
+            </fieldset>
+        </fieldset>
+    </section>
+
+    <script type="text/javascript" src="cube.js"></script>
     <script type="text/javascript" src="main.js"></script>
 
     <script type="text/javascript">
@@ -137,6 +178,11 @@
         bind('ambient-light-g', val => ambientLight.g = val);
         bind('ambient-light-b', val => ambientLight.b = val);
         bind('ambient-light-a', val => ambientLight.a = val);
+
+        bind('diffuse-light-r', val => diffuseLight.r = val);
+        bind('diffuse-light-g', val => diffuseLight.g = val);
+        bind('diffuse-light-b', val => diffuseLight.b = val);
+        bind('diffuse-light-a', val => diffuseLight.a = val);
 
         bind('camera-pos-x', val => camera.pos.x = val);
         bind('camera-pos-y', val => camera.pos.y = val);

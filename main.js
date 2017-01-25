@@ -80,57 +80,14 @@ class Model extends Object3d
     }
 }
 
-function createModel() {
-    const triangles = [
-        new Triangle(
-            new Vertex({x: -10, y: -10, z: 0,
-                        r: 1, g: 0, b: 0, a: 1,
-                        nx: 0, ny: 0, nz: 1}),
-            new Vertex({x: -10, y: 10, z: 0,
-                        r: 0, g: 1, b: 0, a: 1,
-                        nx: 0, ny: 0, nz: 1}),
-            new Vertex({x: 10, y: -10, z: 0,
-                        r: 0, g: 0, b: 1, a: 1,
-                        nx: 0, ny: 0, nz: 1})),
-        new Triangle(
-            new Vertex({x: 10, y: 10, z: 0,
-                        r: 1, g: 0, b: 0, a: 1,
-                        nx: 0, ny: 0, nz: 1}),
-            new Vertex({x: 10, y: -10, z: 0,
-                        r: 0, g: 1, b: 0, a: 1,
-                        nx: 0, ny: 0, nz: 1}),
-            new Vertex({x: -10, y: 10, z: 0,
-                        r: 0, g: 0, b: 1, a: 1,
-                        nx: 0, ny: 0, nz: 1})),
-    ];
+function createModel(spec) {
+    const triangles = spec.map(triangle => {
+        return new Triangle(...triangle.map(vertex => {
+            return new Vertex(vertex);
+        }));
+    });
 
     return new Model(triangles);
-
-    let x = size, y = size, z = size;
-
-    for (let t = 0; t < 12; ++t) {
-        const verts = [];
-        for (let v = 0; v < 3; ++v) {
-            const i = t * 3 + v;
-            x = -x;
-            if (i % 2 == 0) {
-                y = -y;
-            }
-            if (i % 4 == 0) {
-                z = -z;
-            }
-            const vert = new Vertex({
-                x, y, z,
-                r: 0, g: 0, b: 1, a: 1,
-                nx: 0, ny: 0, nz: 1
-            });
-
-            verts.push(vert);
-        }
-        triangles.push(new Triangle(...verts));
-    }
-
-    return new Model(triangles.slice(0, 3));
 }
 
 function clear() {
@@ -231,7 +188,7 @@ function drawTriangle(triangle) {
                 let edge2 = spans[y].rightEdge;
 
                 // How much to interpolate on each step.
-                let step = 1 / edge2.x - edge1.x;
+                let step = 1 / (edge2.x - edge1.x);
                 let pos = 0;
 
                 for (let x = edge1.x; x < edge2.x; ++x) {
@@ -267,16 +224,15 @@ function drawTriangle(triangle) {
                   }
 
                   if (shouldDrawPixel) {
-
-                    const factor = Math.min(Math.max(0, -1 * (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z)), 1);
-
+                    const factor = (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z);
                     r *= (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
-                    g *= (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a)
-                    b *= (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a)
+                    g *= (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a);
+                    b *= (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a);
 
                     r = Math.max(Math.min(r, 1), 0);
                     g = Math.max(Math.min(g, 1), 0);
                     b = Math.max(Math.min(b, 1), 0);
+
                     setPixel(x, y, r * 255, g * 255, b * 255, a * 255);
                   }
 
@@ -294,14 +250,11 @@ function drawTriangle(triangle) {
     drawSpans(spans);
 }
 
-function drawVertex(v) {
-    //console.log('Draw vertex', v);
-    setPixel(v.x, v.y,
-        v.r * 255, v.g * 255, v.b * 255, v.a * 255);
-}
-
 function setPixel(x, y, r, g, b, a) {
-    //console.log(x,y,r,g,b,a);
+    if (x < 0 || x > image.width || y < 0 || y > image.height) {
+        return;
+    }
+
     const i = Math.round(y) * 4 * image.width + Math.round(x) * 4;
     const d = image.data;
     d[i] = r | 0;
@@ -323,41 +276,40 @@ function transformAndProject(model) {
             v.y *= model.scale.y;
             v.z *= model.scale.z;
 
-            [
-                v.y,
-                v.z,
-            ] = [
-                Math.cos(model.rotate.x) * v.y + Math.sin(model.rotate.x) * v.z,
-                -Math.sin(model.rotate.x) * v.y + Math.cos(model.rotate.x) * v.z,
-            ];
+            let tempA, tempB;
+            tempA = Math.cos(model.rotate.x) * v.y + Math.sin(model.rotate.x) * v.z;
+            tempB = -Math.sin(model.rotate.x) * v.y + Math.cos(model.rotate.x) * v.z;
+            v.y = tempA;
+            v.z = tempB;
 
-            [
-                v.x,
-                v.z,
-            ] = [
-                Math.cos(model.rotate.y) * v.x + Math.sin(model.rotate.y) * v.z,
-                -Math.sin(model.rotate.y) * v.x + Math.cos(model.rotate.y) * v.z,
-            ];
+            tempA = Math.cos(model.rotate.y) * v.x + Math.sin(model.rotate.y) * v.z;
+            tempB = -Math.sin(model.rotate.y) * v.x + Math.cos(model.rotate.y) * v.z;
+            v.x = tempA;
+            v.z = tempB;
 
-            [
-                v.x,
-                v.z,
-            ] = [
-                Math.cos(model.rotate.z) * v.x + Math.sin(model.rotate.z) * v.y,
-                -Math.sin(model.rotate.z) * v.x + Math.cos(model.rotate.z) * v.y,
-            ];
-
-            [
-                v.nx,
-                v.nz,
-            ] = [
-                Math.cos(model.rotate.y) * v.nx + Math.sin(model.rotate.y) * v.nz,
-                -Math.sin(model.rotate.y) * v.nx + Math.cos(model.rotate.y) * v.nz,
-            ];
+            tempA = Math.cos(model.rotate.z) * v.x + Math.sin(model.rotate.z) * v.y;
+            tempB = -Math.sin(model.rotate.z) * v.x + Math.cos(model.rotate.z) * v.y;
+            v.x = tempA;
+            v.y = tempB;
 
             v.x += model.pos.x;
             v.y += model.pos.y;
             v.z += model.pos.z;
+
+            tempA = Math.cos(model.rotate.x) * v.ny + Math.sin(model.rotate.x) * v.nz;
+            tempB = -Math.sin(model.rotate.x) * v.ny + Math.cos(model.rotate.x) * v.nz;
+            v.ny = tempA;
+            v.nz = tempB;
+
+            tempA = Math.cos(model.rotate.y) * v.nx + Math.sin(model.rotate.y) * v.nz;
+            tempB = -Math.sin(model.rotate.y) * v.nx + Math.cos(model.rotate.y) * v.nz;
+            v.nx = tempA;
+            v.nz = tempB;
+
+            tempA = Math.cos(model.rotate.z) * v.nx + Math.sin(model.rotate.z) * v.ny;
+            tempB = -Math.sin(model.rotate.z) * v.nx + Math.cos(model.rotate.z) * v.ny;
+            v.nx = tempA;
+            v.ny = tempB;
 
             v.x -= camera.pos.x;
             v.y -= camera.pos.y;
@@ -392,8 +344,8 @@ const context = canvas.getContext('2d');
 let image;
 
 let useDepthBuffer = true;
-const model = createModel();
-const camera = new Camera();
+const model = createModel(modelData);
+const camera = new Camera({y: 20, z: -20});
 const ambientLight = new Light({r: 1, g: 1, b: 1, a: .2});
 const diffuseLight = new Light({r: 1, g: 1, b: 1, a: .8, z: 1});
 
@@ -402,9 +354,6 @@ function loop() {
     render();
     requestAnimationFrame(loop);
 }
-
-model.rotate.x = .25;
-model.rotate.y = .25;
 
 clear();
 loop();
