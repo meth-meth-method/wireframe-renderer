@@ -46,8 +46,8 @@ class Span {
 }
 
 class Triangle {
-    constructor(...vertices) {
-        this.vertices = vertices.slice(0, 3);
+    constructor(vertices) {
+        this.vertices = vertices;
     }
 }
 
@@ -82,7 +82,7 @@ class Model extends Object3d
 
 function createModel(spec) {
     const triangles = spec.map(triangle => {
-        return new Triangle(...triangle.map(vertex => {
+        return new Triangle(triangle.map(vertex => {
             return new Vertex(vertex);
         }));
     });
@@ -329,7 +329,7 @@ function projectVertex(vertex, camera) {
 
 function transformAndProject(model) {
     return model.faces.map(tri => {
-        return new Triangle(...tri.vertices.map(vertex => {
+        return new Triangle(tri.vertices.map(vertex => {
             return projectVertex(transformVertex(vertex.clone(), model), camera);
         }))
     });
