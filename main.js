@@ -263,68 +263,74 @@ function setPixel(x, y, r, g, b, a) {
     d[i + 3] = a | 0;
 }
 
+function transformVertex(vertex, model) {
+    vertex.x -= model.origin.x;
+    vertex.y -= model.origin.y;
+    vertex.z -= model.origin.z;
+
+    vertex.x *= model.scale.x;
+    vertex.y *= model.scale.y;
+    vertex.z *= model.scale.z;
+
+    let tempA, tempB;
+    tempA = Math.cos(model.rotate.x) * vertex.y + Math.sin(model.rotate.x) * vertex.z;
+    tempB = -Math.sin(model.rotate.x) * vertex.y + Math.cos(model.rotate.x) * vertex.z;
+    vertex.y = tempA;
+    vertex.z = tempB;
+
+    tempA = Math.cos(model.rotate.y) * vertex.x + Math.sin(model.rotate.y) * vertex.z;
+    tempB = -Math.sin(model.rotate.y) * vertex.x + Math.cos(model.rotate.y) * vertex.z;
+    vertex.x = tempA;
+    vertex.z = tempB;
+
+    tempA = Math.cos(model.rotate.z) * vertex.x + Math.sin(model.rotate.z) * vertex.y;
+    tempB = -Math.sin(model.rotate.z) * vertex.x + Math.cos(model.rotate.z) * vertex.y;
+    vertex.x = tempA;
+    vertex.y = tempB;
+
+    vertex.x += model.pos.x;
+    vertex.y += model.pos.y;
+    vertex.z += model.pos.z;
+
+    tempA = Math.cos(model.rotate.x) * vertex.ny + Math.sin(model.rotate.x) * vertex.nz;
+    tempB = -Math.sin(model.rotate.x) * vertex.ny + Math.cos(model.rotate.x) * vertex.nz;
+    vertex.ny = tempA;
+    vertex.nz = tempB;
+
+    tempA = Math.cos(model.rotate.y) * vertex.nx + Math.sin(model.rotate.y) * vertex.nz;
+    tempB = -Math.sin(model.rotate.y) * vertex.nx + Math.cos(model.rotate.y) * vertex.nz;
+    vertex.nx = tempA;
+    vertex.nz = tempB;
+
+    tempA = Math.cos(model.rotate.z) * vertex.nx + Math.sin(model.rotate.z) * vertex.ny;
+    tempB = -Math.sin(model.rotate.z) * vertex.nx + Math.cos(model.rotate.z) * vertex.ny;
+    vertex.nx = tempA;
+    vertex.ny = tempB;
+
+    return vertex;
+}
+
+function projectVertex(vertex, camera) {
+    vertex.x -= camera.pos.x;
+    vertex.y -= camera.pos.y;
+    vertex.z -= camera.pos.z;
+
+    vertex.x /= (vertex.z + camera.fov) * (1 / camera.fov);
+    vertex.y /= (vertex.z + camera.fov) * (1 / camera.fov);
+
+    vertex.x *= canvas.height / 80;
+    vertex.y *= canvas.height / 80;
+
+    vertex.x += canvas.width / 2;
+    vertex.y += canvas.height / 2;
+
+    return vertex;
+}
+
 function transformAndProject(model) {
     return model.faces.map(tri => {
-        return new Triangle(...tri.vertices.map(vert => {
-            const v = vert.clone();
-
-            v.x -= model.origin.x;
-            v.y -= model.origin.y;
-            v.z -= model.origin.z;
-
-            v.x *= model.scale.x;
-            v.y *= model.scale.y;
-            v.z *= model.scale.z;
-
-            let tempA, tempB;
-            tempA = Math.cos(model.rotate.x) * v.y + Math.sin(model.rotate.x) * v.z;
-            tempB = -Math.sin(model.rotate.x) * v.y + Math.cos(model.rotate.x) * v.z;
-            v.y = tempA;
-            v.z = tempB;
-
-            tempA = Math.cos(model.rotate.y) * v.x + Math.sin(model.rotate.y) * v.z;
-            tempB = -Math.sin(model.rotate.y) * v.x + Math.cos(model.rotate.y) * v.z;
-            v.x = tempA;
-            v.z = tempB;
-
-            tempA = Math.cos(model.rotate.z) * v.x + Math.sin(model.rotate.z) * v.y;
-            tempB = -Math.sin(model.rotate.z) * v.x + Math.cos(model.rotate.z) * v.y;
-            v.x = tempA;
-            v.y = tempB;
-
-            v.x += model.pos.x;
-            v.y += model.pos.y;
-            v.z += model.pos.z;
-
-            tempA = Math.cos(model.rotate.x) * v.ny + Math.sin(model.rotate.x) * v.nz;
-            tempB = -Math.sin(model.rotate.x) * v.ny + Math.cos(model.rotate.x) * v.nz;
-            v.ny = tempA;
-            v.nz = tempB;
-
-            tempA = Math.cos(model.rotate.y) * v.nx + Math.sin(model.rotate.y) * v.nz;
-            tempB = -Math.sin(model.rotate.y) * v.nx + Math.cos(model.rotate.y) * v.nz;
-            v.nx = tempA;
-            v.nz = tempB;
-
-            tempA = Math.cos(model.rotate.z) * v.nx + Math.sin(model.rotate.z) * v.ny;
-            tempB = -Math.sin(model.rotate.z) * v.nx + Math.cos(model.rotate.z) * v.ny;
-            v.nx = tempA;
-            v.ny = tempB;
-
-            v.x -= camera.pos.x;
-            v.y -= camera.pos.y;
-            v.z -= camera.pos.z;
-
-            v.x /= (v.z + camera.fov) * (1 / camera.fov);
-            v.y /= (v.z + camera.fov) * (1 / camera.fov);
-
-            v.x *= canvas.height / 80;
-            v.y *= canvas.height / 80;
-
-            v.x += canvas.width / 2;
-            v.y += canvas.height / 2;
-
-            return v;
+        return new Triangle(...tri.vertices.map(vertex => {
+            return projectVertex(transformVertex(vertex.clone(), model), camera);
         }))
     });
 }
