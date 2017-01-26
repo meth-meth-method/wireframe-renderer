@@ -45,9 +45,10 @@ class Span {
     }
 }
 
-class Triangle {
+class Face {
     constructor(vertices) {
         this.vertices = vertices;
+        this.projected = new Array(3);
     }
 }
 
@@ -80,27 +81,16 @@ class Model extends Object3d
     }
 }
 
-function createModel(spec) {
-    const triangles = spec.map(triangle => {
-        return new Triangle(triangle.map(vertex => {
-            return new Vertex(vertex);
-        }));
-    });
+class Renderer {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.context = canvas.getContext('2d');
+        this.buffer = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        this.depthBuffer = new Array(this.canvas.width * this.canvas.height);
+        this.lines = new Array(this.canvas.height);
+    }
 
-    return new Model(triangles);
-}
-
-function clear() {
-    image = context.createImageData(800, 600);
-}
-
-
-function drawTriangle(triangle) {
-    const spans = new Array(canvas.height).fill(0);
-    let firstSpanLine = Infinity;
-    let lastSpanLine = -1;
-
-    function addEdge(spans, from, to) {
+    addEdge(lines, from, to) {
         let yDiff = Math.ceil(to.y - 0.5) - Math.ceil(from.y - 0.5);
         if (yDiff == 0) {
             return;
@@ -115,7 +105,7 @@ function drawTriangle(triangle) {
         const xStep = (end.x - start.x) / len;
         let xPos = start.x + xStep / 2;
 
-        const zStep = (end.z - start.z) / len
+        const zStep = (end.z - start.z) / len;
         let zPos = start.z + zStep / 2;
 
         const rStep = (end.r - start.r) / len;
@@ -143,18 +133,18 @@ function drawTriangle(triangle) {
             const x = Math.ceil(xPos - 0.5);
 
             if (yPos >= 0 && yPos < canvas.height) {
-                if (yPos < firstSpanLine) {
-                    firstSpanLine = yPos;
+                if (yPos < this.firstLine) {
+                    this.firstLine = yPos;
                 }
-                if (yPos > lastSpanLine) {
-                    lastSpanLine = yPos;
-                }
-
-                if (!spans[yPos]) {
-                    spans[yPos] = new Span();
+                if (yPos > this.lastLine) {
+                    this.lastLine = yPos;
                 }
 
-                spans[yPos].edges.push(new Edge({
+                if (!lines[yPos]) {
+                    lines[yPos] = new Span();
+                }
+
+                lines[yPos].edges.push(new Edge({
                     x: x,
                     z: zPos,
                     nx: nxPos,
@@ -169,6 +159,7 @@ function drawTriangle(triangle) {
 
             yPos += 1;
             xPos += xStep;
+            zPos += zStep;
             rPos += rStep;
             gPos += gStep;
             bPos += bStep;
@@ -179,98 +170,113 @@ function drawTriangle(triangle) {
         }
     }
 
-    function drawSpans() {
-        const depthBuffer = new Array(canvas.width * canvas.height).fill(Infinity);
-
-        for (let y = firstSpanLine; y <= lastSpanLine; ++y) {
-            if (spans[y].edges.length === 2) {
-                let edge1 = spans[y].leftEdge;
-                let edge2 = spans[y].rightEdge;
+    drawLines(lines) {
+        for (let y = this.firstLine; y <= this.lastLine; ++y) {
+            if (lines[y]) {
+                const edge1 = lines[y].leftEdge;
+                const edge2 = lines[y].rightEdge;
+                lines[y] = undefined;
 
                 // How much to interpolate on each step.
-                let step = 1 / (edge2.x - edge1.x);
+                const step = 1 / (edge2.x - edge1.x);
                 let pos = 0;
 
                 for (let x = edge1.x; x < edge2.x; ++x) {
-                    let r = edge1.r + (edge2.r - edge1.r) * pos;
-                    let g = edge1.g + (edge2.g - edge1.g) * pos;
-                    let b = edge1.b + (edge2.b - edge1.b) * pos;
-                    const a = edge1.a + (edge2.a - edge1.a) * pos;
+                    const z = edge1.z + (edge2.z - edge1.z) * pos;
+                    const offset = x + y * canvas.width;
+                    if (this.depthBuffer[offset] > z) {
+                        this.depthBuffer[offset] = z
+                        let r = edge1.r + (edge2.r - edge1.r) * pos;
+                        let g = edge1.g + (edge2.g - edge1.g) * pos;
+                        let b = edge1.b + (edge2.b - edge1.b) * pos;
+                        const a = edge1.a + (edge2.a - edge1.a) * pos;
 
-                    let nx = edge1.nx + (edge2.nx - edge1.nx) * pos;
-                    let ny = edge1.ny + (edge2.ny - edge1.ny) * pos;
-                    let nz = edge1.nz + (edge2.nz - edge1.nz) * pos;
+                        let nx = edge1.nx + (edge2.nx - edge1.nx) * pos;
+                        let ny = edge1.ny + (edge2.ny - edge1.ny) * pos;
+                        let nz = edge1.nz + (edge2.nz - edge1.nz) * pos;
 
-                  /* The depth buffer makes sure that a triangle that is further away
-                     does not obscure a triangle that is closer to the camera. This is
-                     done by storing the z-value of each triangle pixel into the depth
-                     buffer. To use the depth buffer we also interpolate between these
-                     z-positions to calculate the z-position each pixel corresponds with.
-                     We only draw the pixel if no "nearer" pixel has yet been drawn.
-                     (This is also a feature that Metal provides for you already.) */
-                  /*var shouldDrawPixel = true
+                        const factor = (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z);
+                        r = r * (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
+                        g = g * (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a);
+                        b = b * (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a);
 
-                  */
+                        r = Math.max(Math.min(r, 1), 0);
+                        g = Math.max(Math.min(g, 1), 0);
+                        b = Math.max(Math.min(b, 1), 0);
 
-                  let shouldDrawPixel = true;
-                  if (useDepthBuffer) {
-                    let z = edge1.z + (edge2.z - edge1.z) * pos
-                    let offset = x + y * canvas.width;
-                    if (depthBuffer[offset] > z) {
-                      depthBuffer[offset] = z
-                    } else {
-                      shouldDrawPixel = false
+                        this.setPixel(x, y,
+                            r * 255 | 0,
+                            g * 255 | 0,
+                            b * 255 | 0,
+                            a * 255 | 0);
                     }
-                  }
 
-                  if (shouldDrawPixel) {
-                    const factor = (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z);
-                    r *= (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
-                    g *= (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a);
-                    b *= (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a);
-
-                    r = Math.max(Math.min(r, 1), 0);
-                    g = Math.max(Math.min(g, 1), 0);
-                    b = Math.max(Math.min(b, 1), 0);
-
-                    setPixel(x, y, r * 255, g * 255, b * 255, a * 255);
-                  }
-
-                  pos = pos + step
+                    pos = pos + step
                 }
             }
         }
     }
 
-    const t = triangle.vertices;
-    addEdge(spans, t[0], t[1]);
-    addEdge(spans, t[1], t[2]);
-    addEdge(spans, t[2], t[0]);
+    render(model, camera) {
+        for (let i = 3; i < this.buffer.data.length; i = i + 4) {
+            this.buffer.data[i] = 0;
+        }
 
-    drawSpans(spans);
-}
+        this.depthBuffer.fill(Infinity);
 
-function setPixel(x, y, r, g, b, a) {
-    if (x < 0 || x > image.width || y < 0 || y > image.height) {
-        return;
+        const verts = new Array(3);
+        for (let i = 0; i !== model.faces.length; ++i) {
+            const face = model.faces[i];
+            for (let j = 0; j < 3; ++j) {
+                verts[j] = face.vertices[j].clone();
+                transformVertex(verts[j], model);
+                projectVertex(verts[j], camera);
+            }
+
+            this.firstLine = Infinity;
+            this.lastLine = -1;
+
+            this.addEdge(this.lines, verts[0], verts[1]);
+            this.addEdge(this.lines, verts[1], verts[2]);
+            this.addEdge(this.lines, verts[2], verts[0]);
+            this.drawLines(this.lines);
+        }
+
+        this.context.putImageData(this.buffer, 0, 0);
     }
 
-    const i = Math.round(y) * 4 * image.width + Math.round(x) * 4;
-    const d = image.data;
-    d[i] = r | 0;
-    d[i + 1] = g | 0;
-    d[i + 2] = b | 0;
-    d[i + 3] = a | 0;
+    setPixel(x, y, r, g, b, a) {
+        if (x < 0 || x > this.buffer.width || y < 0 || y > this.buffer.height) {
+            return;
+        }
+
+        const i = Math.round(y) * 4 * this.buffer.width + Math.round(x) * 4;
+        const d = this.buffer.data;
+        d[i] = r;
+        d[i + 1] = g;
+        d[i + 2] = b;
+        d[i + 3] = a;
+    }
+}
+
+function createModel(spec) {
+    const triangles = spec.map(triangle => {
+        return new Face(triangle.map(vertex => {
+            return new Vertex(vertex);
+        }));
+    });
+
+    return new Model(triangles);
 }
 
 function transformVertex(vertex, model) {
-    vertex.x -= model.origin.x;
-    vertex.y -= model.origin.y;
-    vertex.z -= model.origin.z;
+    vertex.x = vertex.x - model.origin.x;
+    vertex.y = vertex.y - model.origin.y;
+    vertex.z = vertex.z - model.origin.z;
 
-    vertex.x *= model.scale.x;
-    vertex.y *= model.scale.y;
-    vertex.z *= model.scale.z;
+    vertex.x = vertex.x * model.scale.x;
+    vertex.y = vertex.y * model.scale.y;
+    vertex.z = vertex.z * model.scale.z;
 
     let tempA, tempB;
     tempA = Math.cos(model.rotate.x) * vertex.y + Math.sin(model.rotate.x) * vertex.z;
@@ -288,9 +294,9 @@ function transformVertex(vertex, model) {
     vertex.x = tempA;
     vertex.y = tempB;
 
-    vertex.x += model.pos.x;
-    vertex.y += model.pos.y;
-    vertex.z += model.pos.z;
+    vertex.x = vertex.x + model.pos.x;
+    vertex.y = vertex.y + model.pos.y;
+    vertex.z = vertex.z + model.pos.z;
 
     tempA = Math.cos(model.rotate.x) * vertex.ny + Math.sin(model.rotate.x) * vertex.nz;
     tempB = -Math.sin(model.rotate.x) * vertex.ny + Math.cos(model.rotate.x) * vertex.nz;
@@ -306,14 +312,12 @@ function transformVertex(vertex, model) {
     tempB = -Math.sin(model.rotate.z) * vertex.nx + Math.cos(model.rotate.z) * vertex.ny;
     vertex.nx = tempA;
     vertex.ny = tempB;
-
-    return vertex;
 }
 
 function projectVertex(vertex, camera) {
-    vertex.x -= camera.pos.x;
-    vertex.y -= camera.pos.y;
-    vertex.z -= camera.pos.z;
+    vertex.x = vertex.x - camera.pos.x;
+    vertex.y = vertex.y - camera.pos.y;
+    vertex.z = vertex.z - camera.pos.z;
 
     vertex.x /= (vertex.z + camera.fov) * (1 / camera.fov);
     vertex.y /= (vertex.z + camera.fov) * (1 / camera.fov);
@@ -323,43 +327,24 @@ function projectVertex(vertex, camera) {
 
     vertex.x += canvas.width / 2;
     vertex.y += canvas.height / 2;
-
-    return vertex;
 }
 
-function transformAndProject(model) {
-    return model.faces.map(tri => {
-        return new Triangle(tri.vertices.map(vertex => {
-            return projectVertex(transformVertex(vertex.clone(), model), camera);
-        }))
-    });
-}
-
-function render() {
-    const projected = transformAndProject(model);
-    projected.forEach(drawTriangle);
-    updateScreen();
-}
-
-function updateScreen() {
-    context.putImageData(image, 0, 0);
-}
 
 const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-let image;
+const renderer = new Renderer(canvas);
 
-let useDepthBuffer = true;
 const model = createModel(modelData);
 const camera = new Camera({y: 20, z: -20});
 const ambientLight = new Light({r: 1, g: 1, b: 1, a: .2});
 const diffuseLight = new Light({r: 1, g: 1, b: 1, a: .8, z: 1});
 
 function loop() {
-    clear();
     render();
     requestAnimationFrame(loop);
 }
 
-clear();
+function render() {
+    renderer.render(model, camera);
+}
+
 loop();
