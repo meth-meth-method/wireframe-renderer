@@ -224,10 +224,10 @@ class Renderer {
 
         this.depthBuffer.fill(Infinity);
 
-        const verts = new Array(3);
-        for (let i = 0; i !== model.faces.length; ++i) {
-            const face = model.faces[i];
-            for (let j = 0; j < 3; ++j) {
+        var face, verts = new Array(3), i, j;
+        for (i = 0; i !== model.faces.length; ++i) {
+            face = model.faces[i];
+            for (j = 0; j < 3; ++j) {
                 verts[j] = face.vertices[j].clone();
                 transformVertex(verts[j], model);
                 projectVertex(verts[j], camera);
