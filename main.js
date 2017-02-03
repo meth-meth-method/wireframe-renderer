@@ -270,6 +270,8 @@ function createModel(spec) {
 }
 
 function transformVertex(vertex, model) {
+    const r = model.rotate;
+
     vertex.x = vertex.x - model.origin.x;
     vertex.y = vertex.y - model.origin.y;
     vertex.z = vertex.z - model.origin.z;
@@ -278,19 +280,28 @@ function transformVertex(vertex, model) {
     vertex.y = vertex.y * model.scale.y;
     vertex.z = vertex.z * model.scale.z;
 
+    const cx = Math.cos(r.x);
+    const sx = Math.sin(r.x);
+
+    const cy = Math.cos(r.y);
+    const sy = Math.sin(r.y);
+
+    const cz = Math.cos(r.z);
+    const sz = Math.sin(r.z);
+
     let tempA, tempB;
-    tempA = Math.cos(model.rotate.x) * vertex.y + Math.sin(model.rotate.x) * vertex.z;
-    tempB = -Math.sin(model.rotate.x) * vertex.y + Math.cos(model.rotate.x) * vertex.z;
+    tempA = cx * vertex.y + sx * vertex.z;
+    tempB = -sx * vertex.y + cx * vertex.z;
     vertex.y = tempA;
     vertex.z = tempB;
 
-    tempA = Math.cos(model.rotate.y) * vertex.x + Math.sin(model.rotate.y) * vertex.z;
-    tempB = -Math.sin(model.rotate.y) * vertex.x + Math.cos(model.rotate.y) * vertex.z;
+    tempA = cy * vertex.x + sy * vertex.z;
+    tempB = -sy * vertex.x + cy * vertex.z;
     vertex.x = tempA;
     vertex.z = tempB;
 
-    tempA = Math.cos(model.rotate.z) * vertex.x + Math.sin(model.rotate.z) * vertex.y;
-    tempB = -Math.sin(model.rotate.z) * vertex.x + Math.cos(model.rotate.z) * vertex.y;
+    tempA = cz * vertex.x + sz * vertex.y;
+    tempB = -sz * vertex.x + cz * vertex.y;
     vertex.x = tempA;
     vertex.y = tempB;
 
@@ -298,18 +309,18 @@ function transformVertex(vertex, model) {
     vertex.y = vertex.y + model.pos.y;
     vertex.z = vertex.z + model.pos.z;
 
-    tempA = Math.cos(model.rotate.x) * vertex.ny + Math.sin(model.rotate.x) * vertex.nz;
-    tempB = -Math.sin(model.rotate.x) * vertex.ny + Math.cos(model.rotate.x) * vertex.nz;
+    tempA = cx * vertex.ny + sx * vertex.nz;
+    tempB = -sx * vertex.ny + cx * vertex.nz;
     vertex.ny = tempA;
     vertex.nz = tempB;
 
-    tempA = Math.cos(model.rotate.y) * vertex.nx + Math.sin(model.rotate.y) * vertex.nz;
-    tempB = -Math.sin(model.rotate.y) * vertex.nx + Math.cos(model.rotate.y) * vertex.nz;
+    tempA = cy * vertex.nx + sy * vertex.nz;
+    tempB = -sy * vertex.nx + cy * vertex.nz;
     vertex.nx = tempA;
     vertex.nz = tempB;
 
-    tempA = Math.cos(model.rotate.z) * vertex.nx + Math.sin(model.rotate.z) * vertex.ny;
-    tempB = -Math.sin(model.rotate.z) * vertex.nx + Math.cos(model.rotate.z) * vertex.ny;
+    tempA = cz * vertex.nx + sz * vertex.ny;
+    tempB = -sz * vertex.nx + cz * vertex.ny;
     vertex.nx = tempA;
     vertex.ny = tempB;
 }
