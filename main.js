@@ -88,6 +88,9 @@ class Renderer {
         this.buffer = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
         this.depthBuffer = new Array(this.canvas.width * this.canvas.height);
         this.lines = new Array(this.canvas.height);
+
+        this.projectVertices = createProjector();
+        this.transformVertices = createTransformer();
     }
 
     addEdge(lines, from, to) {
@@ -229,9 +232,10 @@ class Renderer {
             face = model.faces[i];
             for (j = 0; j < 3; ++j) {
                 verts[j] = face.vertices[j].clone();
-                transformVertex(verts[j], model);
-                projectVertex(verts[j], camera);
             }
+
+            this.transformVertices(verts, model);
+            this.projectVertices(verts, camera);
 
             this.firstLine = Infinity;
             this.lastLine = -1;
@@ -269,76 +273,102 @@ function createModel(spec) {
     return new Model(triangles);
 }
 
-function transformVertex(vertex, model) {
-    const r = model.rotate;
+function createTransformer() {
+    let cx, sx,  cy, sy,  cz, sz;
+    let t1, t2;
 
-    vertex.x = vertex.x - model.origin.x;
-    vertex.y = vertex.y - model.origin.y;
-    vertex.z = vertex.z - model.origin.z;
+    let r, s, o, p;
 
-    vertex.x = vertex.x * model.scale.x;
-    vertex.y = vertex.y * model.scale.y;
-    vertex.z = vertex.z * model.scale.z;
+    function transformVertex(vertex) {
+        vertex.x = vertex.x - o.x;
+        vertex.y = vertex.y - o.y;
+        vertex.z = vertex.z - o.z;
 
-    const cx = Math.cos(r.x);
-    const sx = Math.sin(r.x);
+        vertex.x = vertex.x * s.x;
+        vertex.y = vertex.y * s.y;
+        vertex.z = vertex.z * s.z;
 
-    const cy = Math.cos(r.y);
-    const sy = Math.sin(r.y);
+        t1 = cx * vertex.y + sx * vertex.z;
+        t2 = -sx * vertex.y + cx * vertex.z;
+        vertex.y = t1;
+        vertex.z = t2;
 
-    const cz = Math.cos(r.z);
-    const sz = Math.sin(r.z);
+        t1 = cy * vertex.x + sy * vertex.z;
+        t2 = -sy * vertex.x + cy * vertex.z;
+        vertex.x = t1;
+        vertex.z = t2;
 
-    let tempA, tempB;
-    tempA = cx * vertex.y + sx * vertex.z;
-    tempB = -sx * vertex.y + cx * vertex.z;
-    vertex.y = tempA;
-    vertex.z = tempB;
+        t1 = cz * vertex.x + sz * vertex.y;
+        t2 = -sz * vertex.x + cz * vertex.y;
+        vertex.x = t1;
+        vertex.y = t2;
 
-    tempA = cy * vertex.x + sy * vertex.z;
-    tempB = -sy * vertex.x + cy * vertex.z;
-    vertex.x = tempA;
-    vertex.z = tempB;
+        vertex.x = vertex.x + model.pos.x;
+        vertex.y = vertex.y + model.pos.y;
+        vertex.z = vertex.z + model.pos.z;
 
-    tempA = cz * vertex.x + sz * vertex.y;
-    tempB = -sz * vertex.x + cz * vertex.y;
-    vertex.x = tempA;
-    vertex.y = tempB;
+        t1 = cx * vertex.ny + sx * vertex.nz;
+        t2 = -sx * vertex.ny + cx * vertex.nz;
+        vertex.ny = t1;
+        vertex.nz = t2;
 
-    vertex.x = vertex.x + model.pos.x;
-    vertex.y = vertex.y + model.pos.y;
-    vertex.z = vertex.z + model.pos.z;
+        t1 = cy * vertex.nx + sy * vertex.nz;
+        t2 = -sy * vertex.nx + cy * vertex.nz;
+        vertex.nx = t1;
+        vertex.nz = t2;
 
-    tempA = cx * vertex.ny + sx * vertex.nz;
-    tempB = -sx * vertex.ny + cx * vertex.nz;
-    vertex.ny = tempA;
-    vertex.nz = tempB;
+        t1 = cz * vertex.nx + sz * vertex.ny;
+        t2 = -sz * vertex.nx + cz * vertex.ny;
+        vertex.nx = t1;
+        vertex.ny = t2;
+    }
 
-    tempA = cy * vertex.nx + sy * vertex.nz;
-    tempB = -sy * vertex.nx + cy * vertex.nz;
-    vertex.nx = tempA;
-    vertex.nz = tempB;
+    return function transformVertices(vertices, model) {
+        o = model.origin;
+        r = model.rotate;
+        s = model.scale;
 
-    tempA = cz * vertex.nx + sz * vertex.ny;
-    tempB = -sz * vertex.nx + cz * vertex.ny;
-    vertex.nx = tempA;
-    vertex.ny = tempB;
+        cx = Math.cos(r.x);
+        sx = Math.sin(r.x);
+
+        cy = Math.cos(r.y);
+        sy = Math.sin(r.y);
+
+        cz = Math.cos(r.z);
+        sz = Math.sin(r.z);
+
+        vertices.map(transformVertex);
+    }
 }
 
-function projectVertex(vertex, camera) {
-    vertex.x = vertex.x - camera.pos.x;
-    vertex.y = vertex.y - camera.pos.y;
-    vertex.z = vertex.z - camera.pos.z;
+function createProjector() {
+    const scale = canvas.height / 80;
+    const w = canvas.width / 2;
+    const h = canvas.height / 2;
+    let p, f;
 
-    vertex.x /= (vertex.z + camera.fov) * (1 / camera.fov);
-    vertex.y /= (vertex.z + camera.fov) * (1 / camera.fov);
+    function projectVertex(vertex, camera) {
+        vertex.x = vertex.x - p.x;
+        vertex.y = vertex.y - p.y;
+        vertex.z = vertex.z - p.z;
 
-    vertex.x *= canvas.height / 80;
-    vertex.y *= canvas.height / 80;
+        vertex.x /= (vertex.z + f) * (1 / f);
+        vertex.y /= (vertex.z + f) * (1 / f);
 
-    vertex.x += canvas.width / 2;
-    vertex.y += canvas.height / 2;
+        vertex.x *= scale;
+        vertex.y *= scale;
+
+        vertex.x += w;
+        vertex.y += h;
+    }
+
+    return function projectVertices(vertices, camera) {
+        p = camera.pos;
+        f = camera.fov;
+        vertices.map(projectVertex);
+    }
 }
+
 
 
 const canvas = document.querySelector('canvas');
