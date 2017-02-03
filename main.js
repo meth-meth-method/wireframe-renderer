@@ -267,10 +267,10 @@ function createLineDrawer(depthBufferSize) {
                         b = Math.max(Math.min(b, 1), 0);
 
                         this.setPixel(x, y,
-                            r * 255 | 0,
-                            g * 255 | 0,
-                            b * 255 | 0,
-                            a * 255 | 0);
+                            r * 255,
+                            g * 255,
+                            b * 255,
+                            a * 255);
                     }
 
                     pos = pos + step
