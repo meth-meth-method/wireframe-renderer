@@ -86,10 +86,9 @@ class Renderer {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
         this.buffer = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
-        this.depthBuffer = new Array(this.canvas.width * this.canvas.height);
         this.lines = new Array(this.canvas.height);
 
-        this.drawLines = createLineDrawer();
+        this.drawLines = createLineDrawer(this.canvas.width * this.canvas.height);
         this.projectVertices = createProjector();
         this.transformVertices = createTransformer();
     }
@@ -179,8 +178,6 @@ class Renderer {
             this.buffer.data[i] = 0;
         }
 
-        this.depthBuffer.fill(Infinity);
-
         var face, verts = new Array(3), i, j;
         for (i = 0; i !== model.faces.length; ++i) {
             face = model.faces[i];
@@ -227,11 +224,15 @@ function createModel(spec) {
     return new Model(triangles);
 }
 
-function createLineDrawer() {
+function createLineDrawer(depthBufferSize) {
+    const depthBuffer = new Float32Array(depthBufferSize);
+
     let pos, step, r, g, b, a, nx, ny, nz, factor, x, y, z, offset;
     let edge1, edge2;
 
     return function drawLines(lines) {
+        depthBuffer.fill(Infinity);
+
         for (y = this.firstLine; y <= this.lastLine; ++y) {
             if (lines[y]) {
                 edge1 = lines[y].leftEdge;
@@ -245,8 +246,8 @@ function createLineDrawer() {
                 for (x = edge1.x; x < edge2.x; ++x) {
                     z = edge1.z + (edge2.z - edge1.z) * pos;
                     offset = x + y * canvas.width;
-                    if (this.depthBuffer[offset] > z) {
-                        this.depthBuffer[offset] = z
+                    if (depthBuffer[offset] > z) {
+                        depthBuffer[offset] = z
                         r = edge1.r + (edge2.r - edge1.r) * pos;
                         g = edge1.g + (edge2.g - edge1.g) * pos;
                         b = edge1.b + (edge2.b - edge1.b) * pos;
