@@ -88,16 +88,75 @@ class Model extends Object3d
 class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
-        this.context = canvas.getContext('2d');
-        this.buffer = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
-        this.lines = new Array(this.canvas.height);
 
-        this.drawLines = createLineDrawer(this.canvas.width * this.canvas.height);
         this.projectVertices = createProjector();
         this.transformVertices = createTransformer();
+        this.drawModel = createLineDrawer(this.canvas);
     }
 
-    addEdge(lines, from, to) {
+    render(model, camera) {
+        var face, verts, i, j;
+        for (i = 0; i !== model.faces.length; ++i) {
+            face = model.faces[i];
+            verts = face.projected;
+            for (j = 0; j < 3; ++j) {
+                verts[j].copy(face.vertices[j]);
+            }
+
+            this.transformVertices(verts, model);
+            this.projectVertices(verts, camera);
+        }
+
+        this.drawModel(model);
+    }
+}
+
+function createModel(spec) {
+    const triangles = spec.map(triangle => {
+        return new Face(triangle.map(vertex => {
+            return new Vertex(vertex);
+        }));
+    });
+
+    return new Model(triangles);
+}
+
+function createLineDrawer(canvas) {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    const context = canvas.getContext('2d');
+    const depthBuffer = new Float32Array(w * h);
+    const buffer = context.getImageData(0, 0, w, h);
+    const data = buffer.data;
+    const lines = new Array(h);
+
+    let firstLine, lastLine;
+
+    function clear() {
+        depthBuffer.fill(Infinity);
+        for (let i = 3; i < data.length; i = i + 4) {
+            data[i] = 0;
+        }
+    }
+
+    function paint() {
+        context.putImageData(buffer, 0, 0);
+    }
+
+    function setPixel(x, y, r, g, b, a) {
+        if (x < 0 || x > w || y < 0 || y > h) {
+            return;
+        }
+
+        const i = Math.round(y) * 4 * w + Math.round(x) * 4;
+        data[i] = r;
+        data[i + 1] = g;
+        data[i + 2] = b;
+        data[i + 3] = a;
+    }
+
+    function addEdge(lines, from, to) {
         let yDiff = Math.ceil(to.y - 0.5) - Math.ceil(from.y - 0.5);
         if (yDiff == 0) {
             return;
@@ -140,11 +199,11 @@ class Renderer {
             const x = Math.ceil(xPos - 0.5);
 
             if (yPos >= 0 && yPos < canvas.height) {
-                if (yPos < this.firstLine) {
-                    this.firstLine = yPos;
+                if (yPos < firstLine) {
+                    firstLine = yPos;
                 }
-                if (yPos > this.lastLine) {
-                    this.lastLine = yPos;
+                if (yPos > lastLine) {
+                    lastLine = yPos;
                 }
 
                 if (!lines[yPos]) {
@@ -177,68 +236,11 @@ class Renderer {
         }
     }
 
-    render(model, camera) {
-        for (let i = 3; i < this.buffer.data.length; i = i + 4) {
-            this.buffer.data[i] = 0;
-        }
-
-        var face, verts, i, j;
-        for (i = 0; i !== model.faces.length; ++i) {
-            face = model.faces[i];
-            verts = face.projected;
-            for (j = 0; j < 3; ++j) {
-                verts[j].copy(face.vertices[j]);
-            }
-
-            this.transformVertices(verts, model);
-            this.projectVertices(verts, camera);
-
-            this.firstLine = Infinity;
-            this.lastLine = -1;
-
-            this.addEdge(this.lines, verts[0], verts[1]);
-            this.addEdge(this.lines, verts[1], verts[2]);
-            this.addEdge(this.lines, verts[2], verts[0]);
-            this.drawLines(this.lines);
-        }
-
-        this.context.putImageData(this.buffer, 0, 0);
-    }
-
-    setPixel(x, y, r, g, b, a) {
-        if (x < 0 || x > this.buffer.width || y < 0 || y > this.buffer.height) {
-            return;
-        }
-
-        const i = Math.round(y) * 4 * this.buffer.width + Math.round(x) * 4;
-        const d = this.buffer.data;
-        d[i] = r;
-        d[i + 1] = g;
-        d[i + 2] = b;
-        d[i + 3] = a;
-    }
-}
-
-function createModel(spec) {
-    const triangles = spec.map(triangle => {
-        return new Face(triangle.map(vertex => {
-            return new Vertex(vertex);
-        }));
-    });
-
-    return new Model(triangles);
-}
-
-function createLineDrawer(depthBufferSize) {
-    const depthBuffer = new Float32Array(depthBufferSize);
-
     let pos, step, r, g, b, a, nx, ny, nz, factor, x, y, z, offset;
     let edge1, edge2;
 
-    return function drawLines(lines) {
-        depthBuffer.fill(Infinity);
-
-        for (y = this.firstLine; y <= this.lastLine; ++y) {
+    function drawLines(lines) {
+        for (y = firstLine; y <= lastLine; ++y) {
             if (lines[y]) {
                 edge1 = lines[y].leftEdge;
                 edge2 = lines[y].rightEdge;
@@ -271,7 +273,7 @@ function createLineDrawer(depthBufferSize) {
                         g = Math.max(Math.min(g, 1), 0);
                         b = Math.max(Math.min(b, 1), 0);
 
-                        this.setPixel(x, y,
+                        setPixel(x, y,
                             r * 255,
                             g * 255,
                             b * 255,
@@ -283,6 +285,23 @@ function createLineDrawer(depthBufferSize) {
             }
         }
     }
+
+    return function drawModel(model) {
+        clear();
+
+        model.faces.forEach(faces => {
+            firstLine = Infinity;
+            lastLine = -1;
+
+            const verts = faces.projected;
+            addEdge(lines, verts[0], verts[1]);
+            addEdge(lines, verts[1], verts[2]);
+            addEdge(lines, verts[2], verts[0]);
+            drawLines(lines);
+        });
+
+        paint();
+    };
 }
 
 function createTransformer() {
