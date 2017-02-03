@@ -89,6 +89,7 @@ class Renderer {
         this.depthBuffer = new Array(this.canvas.width * this.canvas.height);
         this.lines = new Array(this.canvas.height);
 
+        this.drawLines = createLineDrawer();
         this.projectVertices = createProjector();
         this.transformVertices = createTransformer();
     }
@@ -173,53 +174,6 @@ class Renderer {
         }
     }
 
-    drawLines(lines) {
-        for (let y = this.firstLine; y <= this.lastLine; ++y) {
-            if (lines[y]) {
-                const edge1 = lines[y].leftEdge;
-                const edge2 = lines[y].rightEdge;
-                lines[y] = undefined;
-
-                // How much to interpolate on each step.
-                const step = 1 / (edge2.x - edge1.x);
-                let pos = 0;
-
-                for (let x = edge1.x; x < edge2.x; ++x) {
-                    const z = edge1.z + (edge2.z - edge1.z) * pos;
-                    const offset = x + y * canvas.width;
-                    if (this.depthBuffer[offset] > z) {
-                        this.depthBuffer[offset] = z
-                        let r = edge1.r + (edge2.r - edge1.r) * pos;
-                        let g = edge1.g + (edge2.g - edge1.g) * pos;
-                        let b = edge1.b + (edge2.b - edge1.b) * pos;
-                        const a = edge1.a + (edge2.a - edge1.a) * pos;
-
-                        let nx = edge1.nx + (edge2.nx - edge1.nx) * pos;
-                        let ny = edge1.ny + (edge2.ny - edge1.ny) * pos;
-                        let nz = edge1.nz + (edge2.nz - edge1.nz) * pos;
-
-                        const factor = (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z);
-                        r = r * (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
-                        g = g * (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a);
-                        b = b * (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a);
-
-                        r = Math.max(Math.min(r, 1), 0);
-                        g = Math.max(Math.min(g, 1), 0);
-                        b = Math.max(Math.min(b, 1), 0);
-
-                        this.setPixel(x, y,
-                            r * 255 | 0,
-                            g * 255 | 0,
-                            b * 255 | 0,
-                            a * 255 | 0);
-                    }
-
-                    pos = pos + step
-                }
-            }
-        }
-    }
-
     render(model, camera) {
         for (let i = 3; i < this.buffer.data.length; i = i + 4) {
             this.buffer.data[i] = 0;
@@ -271,6 +225,58 @@ function createModel(spec) {
     });
 
     return new Model(triangles);
+}
+
+function createLineDrawer() {
+    let pos, step, r, g, b, a, nx, ny, nz, factor, x, y, z, offset;
+    let edge1, edge2;
+
+    return function drawLines(lines) {
+        for (y = this.firstLine; y <= this.lastLine; ++y) {
+            if (lines[y]) {
+                edge1 = lines[y].leftEdge;
+                edge2 = lines[y].rightEdge;
+                lines[y] = undefined;
+
+                // How much to interpolate on each step.
+                step = 1 / (edge2.x - edge1.x);
+                pos = 0;
+
+                for (x = edge1.x; x < edge2.x; ++x) {
+                    z = edge1.z + (edge2.z - edge1.z) * pos;
+                    offset = x + y * canvas.width;
+                    if (this.depthBuffer[offset] > z) {
+                        this.depthBuffer[offset] = z
+                        r = edge1.r + (edge2.r - edge1.r) * pos;
+                        g = edge1.g + (edge2.g - edge1.g) * pos;
+                        b = edge1.b + (edge2.b - edge1.b) * pos;
+                        a = edge1.a + (edge2.a - edge1.a) * pos;
+
+                        nx = edge1.nx + (edge2.nx - edge1.nx) * pos;
+                        ny = edge1.ny + (edge2.ny - edge1.ny) * pos;
+                        nz = edge1.nz + (edge2.nz - edge1.nz) * pos;
+
+                        factor = (nx * diffuseLight.x + ny * diffuseLight.y + nz * diffuseLight.z);
+                        r = r * (ambientLight.r * ambientLight.a + factor * diffuseLight.r * diffuseLight.a);
+                        g = g * (ambientLight.g * ambientLight.a + factor * diffuseLight.g * diffuseLight.a);
+                        b = b * (ambientLight.b * ambientLight.a + factor * diffuseLight.b * diffuseLight.a);
+
+                        r = Math.max(Math.min(r, 1), 0);
+                        g = Math.max(Math.min(g, 1), 0);
+                        b = Math.max(Math.min(b, 1), 0);
+
+                        this.setPixel(x, y,
+                            r * 255 | 0,
+                            g * 255 | 0,
+                            b * 255 | 0,
+                            a * 255 | 0);
+                    }
+
+                    pos = pos + step
+                }
+            }
+        }
+    }
 }
 
 function createTransformer() {
