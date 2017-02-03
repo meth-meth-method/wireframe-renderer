@@ -279,52 +279,53 @@ function createTransformer() {
 
     let r, s, o, p;
 
-    function transformVertex(vertex) {
-        vertex.x = vertex.x - o.x;
-        vertex.y = vertex.y - o.y;
-        vertex.z = vertex.z - o.z;
+    function transformVertex(v) {
+        v.x = v.x - o.x;
+        v.y = v.y - o.y;
+        v.z = v.z - o.z;
 
-        vertex.x = vertex.x * s.x;
-        vertex.y = vertex.y * s.y;
-        vertex.z = vertex.z * s.z;
+        v.x = v.x * s.x;
+        v.y = v.y * s.y;
+        v.z = v.z * s.z;
 
-        t1 = cx * vertex.y + sx * vertex.z;
-        t2 = -sx * vertex.y + cx * vertex.z;
-        vertex.y = t1;
-        vertex.z = t2;
+        t1 = cx * v.y + sx * v.z;
+        t2 = -sx * v.y + cx * v.z;
+        v.y = t1;
+        v.z = t2;
 
-        t1 = cy * vertex.x + sy * vertex.z;
-        t2 = -sy * vertex.x + cy * vertex.z;
-        vertex.x = t1;
-        vertex.z = t2;
+        t1 = cy * v.x + sy * v.z;
+        t2 = -sy * v.x + cy * v.z;
+        v.x = t1;
+        v.z = t2;
 
-        t1 = cz * vertex.x + sz * vertex.y;
-        t2 = -sz * vertex.x + cz * vertex.y;
-        vertex.x = t1;
-        vertex.y = t2;
+        t1 = cz * v.x + sz * v.y;
+        t2 = -sz * v.x + cz * v.y;
+        v.x = t1;
+        v.y = t2;
 
-        vertex.x = vertex.x + model.pos.x;
-        vertex.y = vertex.y + model.pos.y;
-        vertex.z = vertex.z + model.pos.z;
+        v.x = v.x + p.x;
+        v.y = v.y + p.y;
+        v.z = v.z + p.z;
 
-        t1 = cx * vertex.ny + sx * vertex.nz;
-        t2 = -sx * vertex.ny + cx * vertex.nz;
-        vertex.ny = t1;
-        vertex.nz = t2;
+        t1 = cx * v.ny + sx * v.nz;
+        t2 = -sx * v.ny + cx * v.nz;
+        v.ny = t1;
+        v.nz = t2;
 
-        t1 = cy * vertex.nx + sy * vertex.nz;
-        t2 = -sy * vertex.nx + cy * vertex.nz;
-        vertex.nx = t1;
-        vertex.nz = t2;
+        t1 = cy * v.nx + sy * v.nz;
+        t2 = -sy * v.nx + cy * v.nz;
+        v.nx = t1;
+        v.nz = t2;
 
-        t1 = cz * vertex.nx + sz * vertex.ny;
-        t2 = -sz * vertex.nx + cz * vertex.ny;
-        vertex.nx = t1;
-        vertex.ny = t2;
+        t1 = cz * v.nx + sz * v.ny;
+        t2 = -sz * v.nx + cz * v.ny;
+        v.nx = t1;
+        v.ny = t2;
     }
 
     return function transformVertices(vertices, model) {
         o = model.origin;
+        p = model.pos;
         r = model.rotate;
         s = model.scale;
 
