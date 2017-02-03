@@ -14,13 +14,17 @@ class Vertex {
             nx: 0, ny: 0, nz: 0,
         }, def);
 
-        Object.keys(data).forEach(key => {
-            this[key] = data[key];
-        });
+        this.copy(data);
     }
 
     clone() {
         return new Vertex(this);
+    }
+
+    copy(vertex) {
+        Object.keys(vertex).forEach(key => {
+            this[key] = vertex[key];
+        });
     }
 }
 
@@ -48,7 +52,7 @@ class Span {
 class Face {
     constructor(vertices) {
         this.vertices = vertices;
-        this.projected = new Array(3);
+        this.projected = vertices.map(_ => new Vertex());
     }
 }
 
@@ -178,11 +182,12 @@ class Renderer {
             this.buffer.data[i] = 0;
         }
 
-        var face, verts = new Array(3), i, j;
+        var face, verts, i, j;
         for (i = 0; i !== model.faces.length; ++i) {
             face = model.faces[i];
+            verts = face.projected;
             for (j = 0; j < 3; ++j) {
-                verts[j] = face.vertices[j].clone();
+                verts[j].copy(face.vertices[j]);
             }
 
             this.transformVertices(verts, model);
