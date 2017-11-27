@@ -1,3 +1,5 @@
+import {meshControl} from './control.js';
+
 class Vector {
     constructor(x = 0, y = 0, z = 0) {
         this.x = x;
@@ -198,20 +200,25 @@ function createProjector(canvas) {
 }
 
 async function main() {
-    const triangle = await fetch('./triangle.json').then(r => r.json());
+    const triangles = await fetch('./mesh.json').then(r => r.json());
 
     const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+
     const renderer = new Renderer(canvas);
 
-    const mesh = createMesh([triangle]);
-    const camera = new Camera({y: 20, z: -20});
+    const mesh = createMesh(triangles);
+    meshControl(mesh);
 
-    function loop() {
+    const camera = new Camera();
+
+    function loop(time) {
+        mesh.rotate.y = time / 300;
         render();
         requestAnimationFrame(loop);
     }
 
-    function render() {
+    function render(time) {
         renderer.clear();
         renderer.render(mesh, camera);
     }

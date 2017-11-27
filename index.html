@@ -7,11 +7,13 @@
             color: #e0e0e0;
             font-family: sans-serif;
             font-size: 10px;
+            margin: 0;
         }
 
         canvas {
-            border: solid 1px #fff;
-            margin: 1em;
+            display: block;
+            image-rendering: pixelated;
+            width: 100vw;
         }
 
         .controls {
@@ -29,24 +31,25 @@
             display: flex;
         }
     </style>
+    <script type="module" src="main.js"></script>
 </head>
 <body>
-    <canvas width="800" height="600" style="image-rendering: pixelated;"></canvas>
+    <canvas width="320" height="160"></canvas>
 
     <section class="controls">
         <fieldset>
             <legend>Position</legend>
 
             <label>
-                X <input name="pos-x" type="range" min="-100" max="100" step="1" value="0" />
+                X <input class="mesh" name="pos.x" type="range" min="-100" max="100" step="0.1" value="0" />
             </label>
 
             <label>
-                Y <input name="pos-y" type="range" min="-100" max="100" step="1" value="0" />
+                Y <input class="mesh" name="pos.y" type="range" min="-100" max="100" step="0.1" value="0" />
             </label>
 
             <label>
-                Z <input name="pos-z" type="range" min="-3000" max="0" step="1" value="0" />
+                Z <input class="mesh" name="pos.z" type="range" min="-3000" max="0" step="0.1" value="0" />
             </label>
         </fieldset>
 
@@ -54,15 +57,15 @@
             <legend>Rotation</legend>
 
             <label>
-                X <input name="rotate-x" type="range" min="-3600" max="3600" step="1" value="0" />
+                X <input class="mesh" name="rotate.x" type="range" min="-360" max="360" step="0.1" value="0" />
             </label>
 
             <label>
-                Y <input name="rotate-y" type="range" min="-3600" max="3600" step="1" value="0" />
+                Y <input class="mesh" name="rotate.y" type="range" min="-360" max="360" step="0.1" value="0" />
             </label>
 
             <label>
-                Z <input name="rotate-z" type="range" min="-3600" max="3600" step="1" value="0" />
+                Z <input class="mesh" name="rotate.z" type="range" min="-360" max="360" step="0.1" value="0" />
             </label>
         </fieldset>
 
@@ -70,15 +73,15 @@
             <legend>Scale</legend>
 
             <label>
-                X <input name="scale-x" type="range" min="0" max="10" step=".1" value="1" />
+                X <input class="mesh" name="scale.x" type="range" min="0" max="10" step=".1" value="1" />
             </label>
 
             <label>
-                Y <input name="scale-y" type="range" min="0" max="10" step=".1" value="1" />
+                Y <input class="mesh" name="scale.y" type="range" min="0" max="10" step=".1" value="1" />
             </label>
 
             <label>
-                Z <input name="scale-z" type="range" min="0" max="10" step=".1" value="1" />
+                Z <input class="mesh" name="scale.z" type="range" min="0" max="10" step=".1" value="1" />
             </label>
         </fieldset>
 
@@ -86,54 +89,25 @@
             <legend>Camera</legend>
 
             <label>
-                FOV <input name="fov" type="range" min="1" max="180" step="1" value="100" />
+                FOV <input class="camera" name="fov" type="range" min="1" max="180" step="0.1" value="100" />
             </label>
 
             <fieldset>
                 <legend>Position</legend>
 
                 <label>
-                    X <input name="camera-pos-x" type="range" min="-50" max="50" step="1" value="0" />
+                    X <input class="camera" name="pos.x" type="range" min="-50" max="50" step="0.1" value="0" />
                 </label>
 
                 <label>
-                    Y <input name="camera-pos-y" type="range" min="-50" max="50" step="1" value="0" />
+                    Y <input class="camera" name="pos.y" type="range" min="-50" max="50" step="0.1" value="0" />
                 </label>
 
                 <label>
-                    Z <input name="camera-pos-z" type="range" min="-3000" max="3000" step="1" value="0" />
+                    Z <input class="camera" name="pos.z" type="range" min="-3000" max="3000" step="0.1" value="0" />
                 </label>
             </fieldset>
         </fieldset>
     </section>
-
-    <script type="text/javascript" src="main.js"></script>
-
-    <script type="text/javascript">
-        function bind(name, onChange) {
-            const input = document.querySelector(`[name=${name}]`);
-            input.addEventListener('input', (event) => {
-                onChange(parseFloat(event.target.value));
-            });
-        }
-
-        bind('rotate-x', val => model.rotate.x = val / 360);
-        bind('rotate-y', val => model.rotate.y = val / 360);
-        bind('rotate-z', val => model.rotate.z = val / 360);
-
-        bind('scale-x', val => model.scale.x = val);
-        bind('scale-y', val => model.scale.y = val);
-        bind('scale-z', val => model.scale.z = val);
-
-        bind('pos-x', val => model.pos.x = val);
-        bind('pos-y', val => model.pos.y = val);
-        bind('pos-z', val => model.pos.z = val);
-
-        bind('camera-pos-x', val => camera.pos.x = val);
-        bind('camera-pos-y', val => camera.pos.y = val);
-        bind('camera-pos-z', val => camera.pos.z = val);
-
-        bind('fov', val => camera.fov = val);
-    </script>
 </body>
 </html>
