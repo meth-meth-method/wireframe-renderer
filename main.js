@@ -379,7 +379,7 @@ function createProjector() {
     const h = canvas.height / 2;
     let p, f;
 
-    function projectVertex(vertex, camera) {
+    function projectVertex(vertex) {
         vertex.x = vertex.x - p.x;
         vertex.y = vertex.y - p.y;
         vertex.z = vertex.z - p.z;
