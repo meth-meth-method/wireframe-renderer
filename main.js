@@ -44,9 +44,6 @@ class Object3d
     }
 }
 
-class Light extends Vertex {
-}
-
 class Camera extends Object3d
 {
     constructor() {
@@ -227,8 +224,6 @@ const renderer = new Renderer(canvas);
 
 const model = createModel(modelData);
 const camera = new Camera({y: 20, z: -20});
-const ambientLight = new Light({r: 1, g: 1, b: 1, a: .2});
-const diffuseLight = new Light({r: 1, g: 1, b: 1, a: .8, z: 1});
 
 function loop() {
     render();
