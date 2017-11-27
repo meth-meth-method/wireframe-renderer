@@ -92,7 +92,7 @@ class Renderer {
 
         this.projectVertices = createProjector();
         this.transformVertices = createTransformer();
-        this.drawModel = createLineDrawer(this.canvas);
+        this.drawModel = createWireframeDrawer(this.canvas);
     }
 
     clear() {
