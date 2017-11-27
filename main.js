@@ -66,7 +66,7 @@ class Renderer {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
 
-        this.projectVertices = createProjector();
+        this.projectVertices = createProjector(canvas);
         this.transformVertices = createTransformer();
         this.drawModel = createWireframeDrawer(this.canvas);
     }
@@ -174,7 +174,7 @@ function createTransformer() {
     }
 }
 
-function createProjector() {
+function createProjector(canvas) {
     const scale = canvas.height / 80;
     const w = canvas.width / 2;
     const h = canvas.height / 2;
