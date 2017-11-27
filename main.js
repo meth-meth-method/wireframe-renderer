@@ -170,7 +170,7 @@ function createTransformer() {
         cosZ = Math.cos(r.z);
         sinZ = Math.sin(r.z);
 
-        vertices.map(transformVertex);
+        vertices.forEach(transformVertex);
     }
 }
 
