@@ -153,21 +153,6 @@ function createTransformer() {
         v.x = v.x + p.x;
         v.y = v.y + p.y;
         v.z = v.z + p.z;
-
-        t1 = cx * v.ny + sx * v.nz;
-        t2 = -sx * v.ny + cx * v.nz;
-        v.ny = t1;
-        v.nz = t2;
-
-        t1 = cy * v.nx + sy * v.nz;
-        t2 = -sy * v.nx + cy * v.nz;
-        v.nx = t1;
-        v.nz = t2;
-
-        t1 = cz * v.nx + sz * v.ny;
-        t2 = -sz * v.nx + cz * v.ny;
-        v.nx = t1;
-        v.ny = t2;
     }
 
     return function transformVertices(vertices, model) {
