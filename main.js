@@ -121,6 +121,25 @@ function createModel(spec) {
     return new Model(triangles);
 }
 
+function createWireframeDrawer(canvas) {
+    const context = canvas.getContext('2d');
+
+    return function drawModel(model) {
+        context.strokeStyle = '#fff';
+        model.faces.forEach(faces => {
+            const verts = faces.projected;
+            context.beginPath();
+            context.moveTo(verts[0].x, verts[0].y);
+            verts.forEach((vert, index) => {
+                context.lineTo(vert.x, vert.y);
+                console.log(vert.x, vert.y);
+            });
+            context.lineTo(verts[0].x, verts[0].y);
+            context.stroke();
+        });
+    };
+}
+
 function createLineDrawer(canvas) {
     const w = canvas.width;
     const h = canvas.height;
