@@ -121,7 +121,7 @@ function createWireframeDrawer(canvas) {
 }
 
 function createTransformer() {
-    let cx, sx,  cy, sy,  cz, sz;
+    let cosX, sinX,  cosY, sinY,  cosZ, sinZ;
     let t1, t2;
 
     let r, s, o, p;
@@ -135,18 +135,18 @@ function createTransformer() {
         v.y = v.y * s.y;
         v.z = v.z * s.z;
 
-        t1 = cx * v.y + sx * v.z;
-        t2 = -sx * v.y + cx * v.z;
+        t1 = cosX * v.y + sinX * v.z;
+        t2 = -sinX * v.y + cosX * v.z;
         v.y = t1;
         v.z = t2;
 
-        t1 = cy * v.x + sy * v.z;
-        t2 = -sy * v.x + cy * v.z;
+        t1 = cosY * v.x + sinY * v.z;
+        t2 = -sinY * v.x + cosY * v.z;
         v.x = t1;
         v.z = t2;
 
-        t1 = cz * v.x + sz * v.y;
-        t2 = -sz * v.x + cz * v.y;
+        t1 = cosZ * v.x + sinZ * v.y;
+        t2 = -sinZ * v.x + cosZ * v.y;
         v.x = t1;
         v.y = t2;
 
@@ -161,14 +161,14 @@ function createTransformer() {
         r = model.rotate;
         s = model.scale;
 
-        cx = Math.cos(r.x);
-        sx = Math.sin(r.x);
+        cosX = Math.cos(r.x);
+        sinX = Math.sin(r.x);
 
-        cy = Math.cos(r.y);
-        sy = Math.sin(r.y);
+        cosY = Math.cos(r.y);
+        sinY = Math.sin(r.y);
 
-        cz = Math.cos(r.z);
-        sz = Math.sin(r.z);
+        cosZ = Math.cos(r.z);
+        sinZ = Math.sin(r.z);
 
         vertices.map(transformVertex);
     }
@@ -178,15 +178,15 @@ function createProjector() {
     const scale = canvas.height / 80;
     const w = canvas.width / 2;
     const h = canvas.height / 2;
-    let p, f;
+    let pos, fov;
 
     function projectVertex(vertex) {
-        vertex.x = vertex.x - p.x;
-        vertex.y = vertex.y - p.y;
-        vertex.z = vertex.z - p.z;
+        vertex.x = vertex.x - pos.x;
+        vertex.y = vertex.y - pos.y;
+        vertex.z = vertex.z - pos.z;
 
-        vertex.x /= (vertex.z + f) * (1 / f);
-        vertex.y /= (vertex.z + f) * (1 / f);
+        vertex.x /= (vertex.z + fov) * (1 / fov);
+        vertex.y /= (vertex.z + fov) * (1 / fov);
 
         vertex.x *= scale;
         vertex.y *= scale;
@@ -196,8 +196,8 @@ function createProjector() {
     }
 
     return function projectVertices(vertices, camera) {
-        p = camera.pos;
-        f = camera.fov;
+        pos = camera.pos;
+        fov = camera.fov;
         vertices.map(projectVertex);
     }
 }
