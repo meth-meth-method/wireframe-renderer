@@ -6,25 +6,15 @@ class Vector {
     }
 }
 
-class Vertex {
-    constructor(def) {
-        const data = Object.assign({
-            x: 0, y: 0, z: 0,
-            r: 0, g: 0, b: 0, a: 1,
-            nx: 0, ny: 0, nz: 0,
-        }, def);
-
-        this.copy(data);
-    }
-
+class Vertex extends Vector {
     clone() {
-        return new Vertex(this);
+        return new Vertex(this.x, this.y, this.z);
     }
 
     copy(vertex) {
-        Object.keys(vertex).forEach(key => {
-            this[key] = vertex[key];
-        });
+        this.x = vertex.x;
+        this.y = vertex.y;
+        this.z = vertex.z;
     }
 }
 
@@ -94,8 +84,8 @@ class Renderer {
 
 function createMesh(spec) {
     const triangles = spec.map(triangle => {
-        return new Face(triangle.map(vertex => {
-            return new Vertex(vertex);
+        return new Face(triangle.map(([x, y, z]) => {
+            return new Vertex(x, y, z);
         }));
     });
 
@@ -105,9 +95,9 @@ function createMesh(spec) {
 function createWireframeDrawer(canvas) {
     const context = canvas.getContext('2d');
 
-    return function drawMesh(model) {
+    return function drawMesh(mesh) {
         context.strokeStyle = '#fff';
-        model.faces.forEach(faces => {
+        mesh.faces.forEach(faces => {
             const verts = faces.projected;
             context.beginPath();
             context.moveTo(verts[0].x, verts[0].y);
@@ -158,11 +148,11 @@ function createTransformer() {
         v.z = v.z + p.z;
     }
 
-    return function transformVertices(vertices, model) {
-        o = model.origin;
-        p = model.pos;
-        r = model.rotate;
-        s = model.scale;
+    return function transformVertices(vertices, mesh) {
+        o = mesh.origin;
+        p = mesh.pos;
+        r = mesh.rotate;
+        s = mesh.scale;
 
         cosX = Math.cos(r.x);
         sinX = Math.sin(r.x);
@@ -207,22 +197,26 @@ function createProjector(canvas) {
     }
 }
 
+async function main() {
+    const triangle = await fetch('./triangle.json').then(r => r.json());
 
+    const canvas = document.querySelector('canvas');
+    const renderer = new Renderer(canvas);
 
-const canvas = document.querySelector('canvas');
-const renderer = new Renderer(canvas);
+    const mesh = createMesh([triangle]);
+    const camera = new Camera({y: 20, z: -20});
 
-const model = createMesh(modelData);
-const camera = new Camera({y: 20, z: -20});
+    function loop() {
+        render();
+        requestAnimationFrame(loop);
+    }
 
-function loop() {
-    render();
-    requestAnimationFrame(loop);
+    function render() {
+        renderer.clear();
+        renderer.render(mesh, camera);
+    }
+
+    loop();
 }
 
-function render() {
-    renderer.clear();
-    renderer.render(model, camera);
-}
-
-loop();
+main();
