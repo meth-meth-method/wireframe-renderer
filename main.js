@@ -52,7 +52,7 @@ class Camera extends Object3d
     }
 }
 
-class Model extends Object3d
+class Mesh extends Object3d
 {
     constructor(faces) {
         super();
@@ -68,44 +68,44 @@ class Renderer {
 
         this.projectVertices = createProjector(canvas);
         this.transformVertices = createTransformer();
-        this.drawModel = createWireframeDrawer(this.canvas);
+        this.drawMesh = createWireframeDrawer(this.canvas);
     }
 
     clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    render(model, camera) {
+    render(mesh, camera) {
         var face, verts, i, j;
-        for (i = 0; i !== model.faces.length; ++i) {
-            face = model.faces[i];
+        for (i = 0; i !== mesh.faces.length; ++i) {
+            face = mesh.faces[i];
             verts = face.projected;
             for (j = 0; j < 3; ++j) {
                 verts[j].copy(face.vertices[j]);
             }
 
-            this.transformVertices(verts, model);
+            this.transformVertices(verts, mesh);
             this.projectVertices(verts, camera);
         }
 
-        this.drawModel(model);
+        this.drawMesh(mesh);
     }
 }
 
-function createModel(spec) {
+function createMesh(spec) {
     const triangles = spec.map(triangle => {
         return new Face(triangle.map(vertex => {
             return new Vertex(vertex);
         }));
     });
 
-    return new Model(triangles);
+    return new Mesh(triangles);
 }
 
 function createWireframeDrawer(canvas) {
     const context = canvas.getContext('2d');
 
-    return function drawModel(model) {
+    return function drawMesh(model) {
         context.strokeStyle = '#fff';
         model.faces.forEach(faces => {
             const verts = faces.projected;
@@ -121,7 +121,10 @@ function createWireframeDrawer(canvas) {
 }
 
 function createTransformer() {
-    let cosX, sinX,  cosY, sinY,  cosZ, sinZ;
+    let cosX, sinX,
+        cosY, sinY,
+        cosZ, sinZ;
+
     let t1, t2;
 
     let r, s, o, p;
@@ -170,7 +173,9 @@ function createTransformer() {
         cosZ = Math.cos(r.z);
         sinZ = Math.sin(r.z);
 
-        vertices.forEach(transformVertex);
+        for (let v of vertices) {
+            transformVertex(v);
+        }
     }
 }
 
@@ -207,7 +212,7 @@ function createProjector(canvas) {
 const canvas = document.querySelector('canvas');
 const renderer = new Renderer(canvas);
 
-const model = createModel(modelData);
+const model = createMesh(modelData);
 const camera = new Camera({y: 20, z: -20});
 
 function loop() {
