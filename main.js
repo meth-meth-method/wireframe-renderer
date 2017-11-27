@@ -28,27 +28,6 @@ class Vertex {
     }
 }
 
-class Edge extends Vertex {
-}
-
-class Span {
-    constructor() {
-        this.edges = [];
-    }
-
-    get leftEdge() {
-        return this.edges[0].x < this.edges[1].x
-            ? this.edges[0]
-            : this.edges[1];
-    }
-
-    get rightEdge() {
-        return this.edges[0].x > this.edges[1].x
-            ? this.edges[0]
-            : this.edges[1];
-    }
-}
-
 class Face {
     constructor(vertices) {
         this.vertices = vertices;
