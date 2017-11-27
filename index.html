@@ -105,50 +105,6 @@
                 </label>
             </fieldset>
         </fieldset>
-
-        <fieldset>
-            <legend>Light</legend>
-
-            <fieldset>
-                <legend>Ambient</legend>
-
-                <label>
-                    R <input name="ambient-light-r" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    G <input name="ambient-light-g" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    B <input name="ambient-light-b" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    Intensity <input name="ambient-light-a" type="range" min="0" max="1" step=".01" value=".2" />
-                </label>
-            </fieldset>
-
-            <fieldset>
-                <legend>Diffuse</legend>
-
-                <label>
-                    R <input name="diffuse-light-r" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    G <input name="diffuse-light-g" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    B <input name="diffuse-light-b" type="range" min="0" max="1" step=".01" value="1" />
-                </label>
-
-                <label>
-                    Intensity <input name="diffuse-light-a" type="range" min="0" max="1" step=".01" value=".8" />
-                </label>
-            </fieldset>
-        </fieldset>
     </section>
 
     <script type="text/javascript" src="cube.js"></script>
@@ -173,16 +129,6 @@
         bind('pos-x', val => model.pos.x = val);
         bind('pos-y', val => model.pos.y = val);
         bind('pos-z', val => model.pos.z = val);
-
-        bind('ambient-light-r', val => ambientLight.r = val);
-        bind('ambient-light-g', val => ambientLight.g = val);
-        bind('ambient-light-b', val => ambientLight.b = val);
-        bind('ambient-light-a', val => ambientLight.a = val);
-
-        bind('diffuse-light-r', val => diffuseLight.r = val);
-        bind('diffuse-light-g', val => diffuseLight.g = val);
-        bind('diffuse-light-b', val => diffuseLight.b = val);
-        bind('diffuse-light-a', val => diffuseLight.a = val);
 
         bind('camera-pos-x', val => camera.pos.x = val);
         bind('camera-pos-y', val => camera.pos.y = val);
