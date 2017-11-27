@@ -203,7 +203,7 @@ function createProjector(canvas) {
     return function projectVertices(vertices, camera) {
         pos = camera.pos;
         fov = camera.fov;
-        vertices.map(projectVertex);
+        vertices.forEach(projectVertex);
     }
 }
 
