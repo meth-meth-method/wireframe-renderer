@@ -137,7 +137,6 @@ function createWireframeDrawer(canvas) {
             context.moveTo(verts[0].x, verts[0].y);
             verts.forEach((vert, index) => {
                 context.lineTo(vert.x, vert.y);
-                console.log(vert.x, vert.y);
             });
             context.lineTo(verts[0].x, verts[0].y);
             context.stroke();
