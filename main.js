@@ -88,10 +88,15 @@ class Model extends Object3d
 class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
+        this.context = canvas.getContext('2d');
 
         this.projectVertices = createProjector();
         this.transformVertices = createTransformer();
         this.drawModel = createLineDrawer(this.canvas);
+    }
+
+    clear() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     render(model, camera) {
@@ -436,6 +441,7 @@ function loop() {
 }
 
 function render() {
+    renderer.clear();
     renderer.render(model, camera);
 }
 
