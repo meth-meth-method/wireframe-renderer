@@ -122,6 +122,12 @@ function createTransformer() {
         vertex.z *= scale.z;
     }
 
+    function move(vertex, position) {
+        vertex.x += position.x;
+        vertex.y += position.y;
+        vertex.z += position.z;
+    }
+
     function transformVertex(f, v) {
         v.copy(f);
 
@@ -143,9 +149,7 @@ function createTransformer() {
         v.x = t1;
         v.y = t2;
 
-        v.x = v.x + p.x;
-        v.y = v.y + p.y;
-        v.z = v.z + p.z;
+        move(v, p);
     }
 
     return function transformVertices(mesh) {
