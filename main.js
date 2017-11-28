@@ -172,10 +172,14 @@ function createProjector(canvas) {
     const h = canvas.height / 2;
     let pos, fov;
 
+    function offset(vertex, offset) {
+        vertex.x -= pos.x;
+        vertex.y -= pos.y;
+        vertex.z -= pos.z;
+    }
+
     function projectVertex(vertex) {
-        vertex.x = vertex.x - pos.x;
-        vertex.y = vertex.y - pos.y;
-        vertex.z = vertex.z - pos.z;
+        offset(vertex, pos);
 
         vertex.x /= (vertex.z + fov) * (1 / fov);
         vertex.y /= (vertex.z + fov) * (1 / fov);
