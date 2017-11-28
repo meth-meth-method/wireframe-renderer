@@ -6,11 +6,9 @@ class Vector {
         this.y = y;
         this.z = z;
     }
-}
 
-class Vertex extends Vector {
     clone() {
-        return new Vertex(this.x, this.y, this.z);
+        return new Vector(this.x, this.y, this.z);
     }
 
     copy(vertex) {
@@ -23,7 +21,7 @@ class Vertex extends Vector {
 class Face {
     constructor(vertices) {
         this.vertices = vertices;
-        this.projected = vertices.map(_ => new Vertex());
+        this.projected = vertices.map(_ => new Vector());
     }
 }
 
@@ -89,7 +87,7 @@ class Renderer {
 function createMesh(spec) {
     const triangles = spec.map(triangle => {
         return new Face(triangle.map(([x, y, z]) => {
-            return new Vertex(x, y, z);
+            return new Vector(x, y, z);
         }));
     });
 
