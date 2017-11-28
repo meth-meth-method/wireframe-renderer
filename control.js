@@ -7,22 +7,15 @@ function findProp(address, target) {
     return {object, prop}
 }
 
-export function meshControl(mesh) {
-    const inputs = document.querySelectorAll('input.mesh');
+export function UIControl(targets) {
+    const inputs = document.querySelectorAll('.controls input');
     [...inputs].forEach(input => {
-        const {prop, object} = findProp(input.name, mesh);
+        const {prop, object} = findProp(input.name, targets);
         input.addEventListener('input', event => {
-            object[prop] = parseFloat(event.target.value);
+            const value = parseFloat(event.target.value);
+            object[prop] = value;
+            console.log('Setting %s to %f', prop, value);
         });
-    });
-}
-
-export function cameraControl(camera) {
-    const inputs = document.querySelectorAll('input.camera');
-    [...inputs].forEach(input => {
-        const {prop, object} = findProp(input.name, camera);
-        input.addEventListener('input', event => {
-            object[prop] = parseFloat(event.target.value);
-        });
+        input.value = object[prop];
     });
 }

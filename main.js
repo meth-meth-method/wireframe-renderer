@@ -1,4 +1,4 @@
-import {meshControl, cameraControl} from './control.js';
+import {UIControl} from './control.js';
 
 class Vector {
     constructor(x = 0, y = 0, z = 0) {
@@ -38,7 +38,7 @@ class Camera extends Object3d
 {
     constructor() {
         super();
-        this.fov = 90;
+        this.fov = 40;
     }
 }
 
@@ -193,7 +193,7 @@ function createProjector(canvas) {
 
         perspective(vertex, camera.fov);
 
-        zoom(vertex, ((canvas.width + canvas.height) / 2) / 100);
+        zoom(vertex, ((canvas.width + canvas.height) / 2) / 80);
 
         center(vertex, canvas);
     }
@@ -216,10 +216,10 @@ async function main() {
     const renderer = new Renderer(canvas);
 
     const mesh = createMesh(triangles);
-    meshControl(mesh);
-
     const camera = new Camera();
-    cameraControl(camera);
+
+    UIControl({mesh, camera});
+
 
     function loop(time) {
         mesh.rotation.y = time / 600;
