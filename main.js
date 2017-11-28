@@ -175,6 +175,11 @@ function createProjector(canvas) {
         vertex.z -= offset.z;
     }
 
+    function perspective(vertex, fov) {
+        vertex.x /= (vertex.z + fov) * (1 / fov);
+        vertex.y /= (vertex.z + fov) * (1 / fov);
+    }
+
     function center(vertex, canvas) {
         vertex.x += canvas.width / 2;
         vertex.y += canvas.height / 2;
@@ -183,8 +188,7 @@ function createProjector(canvas) {
     function projectVertex(vertex, camera) {
         offset(vertex, camera.pos);
 
-        vertex.x /= (vertex.z + camera.fov) * (1 / camera.fov);
-        vertex.y /= (vertex.z + camera.fov) * (1 / camera.fov);
+        perspective(vertex, camera.fov);
 
         vertex.x *= scale;
         vertex.y *= scale;
