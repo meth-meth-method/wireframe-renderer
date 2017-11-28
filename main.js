@@ -30,7 +30,7 @@ class Object3d
     constructor() {
         this.pos = new Vector();
         this.origin = new Vector();
-        this.rotate = new Vector();
+        this.rotation = new Vector();
     }
 }
 
@@ -107,7 +107,7 @@ function createTransformer() {
 
     let t1, t2;
 
-    let rotate, s, o, p;
+    let rotation, s, o, p;
 
     function offset(vertex, origin) {
         vertex.x -= origin.x;
@@ -154,17 +154,17 @@ function createTransformer() {
     return function transformVertices(mesh) {
         o = mesh.origin;
         p = mesh.pos;
-        rotate = mesh.rotate;
+        rotation = mesh.rotation;
         s = mesh.scale;
 
-        cos.x = Math.cos(rotate.x);
-        sin.x = Math.sin(rotate.x);
+        cos.x = Math.cos(rotation.x);
+        sin.x = Math.sin(rotation.x);
 
-        cos.y = Math.cos(rotate.y);
-        sin.y = Math.sin(rotate.y);
+        cos.y = Math.cos(rotation.y);
+        sin.y = Math.sin(rotation.y);
 
-        cos.z = Math.cos(rotate.z);
-        sin.z = Math.sin(rotate.z);
+        cos.z = Math.cos(rotation.z);
+        sin.z = Math.sin(rotation.z);
 
         for (const face of mesh.faces) {
             let index = 0;
@@ -221,8 +221,8 @@ async function main() {
     const camera = new Camera();
 
     function loop(time) {
-        mesh.rotate.y = time / 600;
-        mesh.rotate.x = Math.sin(time / 3000) / 2;
+        mesh.rotation.y = time / 600;
+        mesh.rotation.x = Math.sin(time / 3000) / 2;
         render();
         requestAnimationFrame(loop);
     }
