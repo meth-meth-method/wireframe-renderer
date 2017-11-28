@@ -31,22 +31,22 @@ function rotate(vertex, rotation) {
     cos.z = Math.cos(rotation.z);
     sin.z = Math.sin(rotation.z);
 
-    let t1, t2;
+    let temp1, temp2;
 
-    t1 = cos.x * vertex.y + sin.x * vertex.z;
-    t2 = -sin.x * vertex.y + cos.x * vertex.z;
-    vertex.y = t1;
-    vertex.z = t2;
+    temp1 = cos.x * vertex.y + sin.x * vertex.z;
+    temp2 = -sin.x * vertex.y + cos.x * vertex.z;
+    vertex.y = temp1;
+    vertex.z = temp2;
 
-    t1 = cos.y * vertex.x + sin.y * vertex.z;
-    t2 = -sin.y * vertex.x + cos.y * vertex.z;
-    vertex.x = t1;
-    vertex.z = t2;
+    temp1 = cos.y * vertex.x + sin.y * vertex.z;
+    temp2 = -sin.y * vertex.x + cos.y * vertex.z;
+    vertex.x = temp1;
+    vertex.z = temp2;
 
-    t1 = cos.z * vertex.x + sin.z * vertex.y;
-    t2 = -sin.z * vertex.x + cos.z * vertex.y;
-    vertex.x = t1;
-    vertex.y = t2;
+    temp1 = cos.z * vertex.x + sin.z * vertex.y;
+    temp2 = -sin.z * vertex.x + cos.z * vertex.y;
+    vertex.x = temp1;
+    vertex.y = temp2;
 }
 
 export function transform(mesh) {
