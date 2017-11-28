@@ -12,8 +12,6 @@ class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
-
-        this.drawMesh = createWireframeDrawer(this.canvas);
     }
 
     clear() {
@@ -29,26 +27,22 @@ class Renderer {
             }
         }
 
-        this.drawMesh(mesh);
+        drawMesh(mesh, this.context);
     }
 }
 
-function createWireframeDrawer(canvas) {
-    const context = canvas.getContext('2d');
-
-    return function drawMesh(mesh) {
-        context.strokeStyle = '#fff';
-        mesh.faces.forEach(faces => {
-            const verts = faces.projected;
-            context.beginPath();
-            context.moveTo(verts[0].x, verts[0].y);
-            verts.forEach((vert, index) => {
-                context.lineTo(vert.x, vert.y);
-            });
-            context.lineTo(verts[0].x, verts[0].y);
-            context.stroke();
+function drawMesh(mesh, context) {
+    context.strokeStyle = '#fff';
+    mesh.faces.forEach(faces => {
+        const verts = faces.projected;
+        context.beginPath();
+        context.moveTo(verts[0].x, verts[0].y);
+        verts.forEach((vert, index) => {
+            context.lineTo(vert.x, vert.y);
         });
-    };
+        context.lineTo(verts[0].x, verts[0].y);
+        context.stroke();
+    });
 }
 
 async function main() {
