@@ -1,15 +1,7 @@
 import {UIControl} from './control.js';
 import {Face} from './Face.js';
+import {Object3d} from './Object3d.js';
 import {Vector} from './Vector.js';
-
-class Object3d
-{
-    constructor() {
-        this.pos = new Vector();
-        this.origin = new Vector();
-        this.rotation = new Vector();
-    }
-}
 
 class Camera extends Object3d
 {
