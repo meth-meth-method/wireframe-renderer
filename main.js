@@ -153,27 +153,16 @@ function createTransformer() {
         vertex.y = t2;
     }
 
-    function transformVertex(f, v) {
-        v.copy(f);
-
-        offset(v, o);
-        scale(v, s);
-
-        rotate(v, r);
-
-        move(v, p);
-    }
-
     return function transformVertices(mesh) {
-        o = mesh.origin;
-        p = mesh.pos;
-        r = mesh.rotation;
-        s = mesh.scale;
-
         for (const face of mesh.faces) {
             let index = 0;
-            for (const vertex of face.vertices) {
-                transformVertex(vertex, face.projected[index++]);
+            for (const vertex of face.projected) {
+                vertex.copy(face.vertices[index++]);
+
+                offset(vertex, mesh.origin);
+                scale(vertex, mesh.scale);
+                rotate(vertex, mesh.rotation);
+                move(vertex, mesh.pos);
             }
         }
     }
