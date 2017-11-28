@@ -69,17 +69,6 @@ class Renderer {
         this.transformVertices(mesh);
         this.projectVertices(mesh, camera);
 
-        /*var face, verts, i, j;
-        mesh.faces.forEach(face => {
-            verts = face.projected;
-            for (j = 0; j < 3; ++j) {
-                verts[j].copy(face.vertices[j]);
-            }
-
-            this.transformVertices(verts, mesh);
-            this.projectVertices(verts, camera);
-        });*/
-
         this.drawMesh(mesh);
     }
 }
