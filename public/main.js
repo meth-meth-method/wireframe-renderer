@@ -44,13 +44,15 @@ async function main() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         for (const face of mesh.faces) {
-            face.projected.forEach((projected, index) => {
-                projected.copy(face.vertices[index]);
+            const triangle = [];
+            for (const vertex of face.vertices) {
+                const projected = vertex.clone();
                 transform(projected, mesh);
                 project(projected, camera, canvas);
-            });
+                triangle.push(projected);
+            }
 
-            drawTriangle(face.projected, context);
+            drawTriangle(triangle, context);
         }
 
     }
