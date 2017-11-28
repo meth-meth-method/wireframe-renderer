@@ -33,16 +33,21 @@ class Renderer {
 
 function drawMesh(mesh, context) {
     context.strokeStyle = '#fff';
-    mesh.faces.forEach(faces => {
-        const verts = faces.projected;
-        context.beginPath();
-        context.moveTo(verts[0].x, verts[0].y);
-        verts.forEach((vert, index) => {
-            context.lineTo(vert.x, vert.y);
-        });
-        context.lineTo(verts[0].x, verts[0].y);
-        context.stroke();
+    mesh.faces.forEach(face => {
+        drawTriangle(face.projected, context);
     });
+}
+
+function drawTriangle(vertices, context) {
+    const first = vertices[0];
+
+    context.beginPath();
+    context.moveTo(first.x, first.y);
+    vertices.forEach((vert, index) => {
+        context.lineTo(vert.x, vert.y);
+    });
+    context.lineTo(first.x, first.y);
+    context.stroke();
 }
 
 async function main() {
