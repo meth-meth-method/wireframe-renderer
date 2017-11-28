@@ -167,8 +167,6 @@ function createTransformer() {
 }
 
 function createProjector(canvas) {
-    const scale = canvas.height / 80;
-
     function offset(vertex, offset) {
         vertex.x -= offset.x;
         vertex.y -= offset.y;
@@ -178,6 +176,11 @@ function createProjector(canvas) {
     function perspective(vertex, fov) {
         vertex.x /= (vertex.z + fov) * (1 / fov);
         vertex.y /= (vertex.z + fov) * (1 / fov);
+    }
+
+    function zoom(vertex, factor) {
+        vertex.x *= factor;
+        vertex.y *= factor;
     }
 
     function center(vertex, canvas) {
@@ -190,8 +193,7 @@ function createProjector(canvas) {
 
         perspective(vertex, camera.fov);
 
-        vertex.x *= scale;
-        vertex.y *= scale;
+        zoom(vertex, ((canvas.width + canvas.height) / 2) / 100);
 
         center(vertex, canvas);
     }
