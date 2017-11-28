@@ -102,12 +102,7 @@ function createWireframeDrawer(canvas) {
 }
 
 function createTransformer() {
-    const sin = new Vector();
-    const cos = new Vector();
-
-    let t1, t2;
-
-    let rotation, s, o, p;
+    let r, s, o, p;
 
     function offset(vertex, origin) {
         vertex.x -= origin.x;
@@ -127,35 +122,9 @@ function createTransformer() {
         vertex.z += position.z;
     }
 
-    function transformVertex(f, v) {
-        v.copy(f);
-
-        offset(v, o);
-        scale(v, s);
-
-        t1 = cos.x * v.y + sin.x * v.z;
-        t2 = -sin.x * v.y + cos.x * v.z;
-        v.y = t1;
-        v.z = t2;
-
-        t1 = cos.y * v.x + sin.y * v.z;
-        t2 = -sin.y * v.x + cos.y * v.z;
-        v.x = t1;
-        v.z = t2;
-
-        t1 = cos.z * v.x + sin.z * v.y;
-        t2 = -sin.z * v.x + cos.z * v.y;
-        v.x = t1;
-        v.y = t2;
-
-        move(v, p);
-    }
-
-    return function transformVertices(mesh) {
-        o = mesh.origin;
-        p = mesh.pos;
-        rotation = mesh.rotation;
-        s = mesh.scale;
+    function rotate(vertex, rotation) {
+        const sin = new Vector();
+        const cos = new Vector();
 
         cos.x = Math.cos(rotation.x);
         sin.x = Math.sin(rotation.x);
@@ -165,6 +134,41 @@ function createTransformer() {
 
         cos.z = Math.cos(rotation.z);
         sin.z = Math.sin(rotation.z);
+
+        let t1, t2;
+
+        t1 = cos.x * vertex.y + sin.x * vertex.z;
+        t2 = -sin.x * vertex.y + cos.x * vertex.z;
+        vertex.y = t1;
+        vertex.z = t2;
+
+        t1 = cos.y * vertex.x + sin.y * vertex.z;
+        t2 = -sin.y * vertex.x + cos.y * vertex.z;
+        vertex.x = t1;
+        vertex.z = t2;
+
+        t1 = cos.z * vertex.x + sin.z * vertex.y;
+        t2 = -sin.z * vertex.x + cos.z * vertex.y;
+        vertex.x = t1;
+        vertex.y = t2;
+    }
+
+    function transformVertex(f, v) {
+        v.copy(f);
+
+        offset(v, o);
+        scale(v, s);
+
+        rotate(v, r);
+
+        move(v, p);
+    }
+
+    return function transformVertices(mesh) {
+        o = mesh.origin;
+        p = mesh.pos;
+        r = mesh.rotation;
+        s = mesh.scale;
 
         for (const face of mesh.faces) {
             let index = 0;
