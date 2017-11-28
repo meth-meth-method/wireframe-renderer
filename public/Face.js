@@ -1,7 +1,8 @@
 import {Vector} from './Vector.js';
 
-export class Face {
+export class Face extends Array {
     constructor(vertices) {
-        this.vertices = vertices;
+        super();
+        this.push(...vertices);
     }
 }

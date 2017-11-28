@@ -45,7 +45,7 @@ async function main() {
 
         for (const face of mesh.faces) {
             const triangle = [];
-            for (const vertex of face.vertices) {
+            for (const vertex of face) {
                 const projected = vertex.clone();
                 transform(projected, mesh);
                 project(projected, camera, canvas);
