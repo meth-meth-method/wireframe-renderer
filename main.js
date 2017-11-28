@@ -116,15 +116,17 @@ function createTransformer() {
         vertex.z -= origin.z;
     }
 
+    function scale(vertex, scale) {
+        vertex.x *= scale.x;
+        vertex.y *= scale.y;
+        vertex.z *= scale.z;
+    }
 
     function transformVertex(f, v) {
         v.copy(f);
 
         offsetFromOrigin(v, o);
-
-        v.x = v.x * s.x;
-        v.y = v.y * s.y;
-        v.z = v.z * s.z;
+        scale(v, s);
 
         t1 = cosX * v.y + sinX * v.z;
         t2 = -sinX * v.y + cosX * v.z;
