@@ -38,65 +38,65 @@
 
     <section class="controls">
         <fieldset>
-            <legend>Position</legend>
-
-            <label>
-                X <input name="mesh.pos.x" type="range" min="-100" max="100" step="0.1" value="0" />
-            </label>
-
-            <label>
-                Y <input name="mesh.pos.y" type="range" min="-100" max="100" step="0.1" value="0" />
-            </label>
-
-            <label>
-                Z <input name="mesh.pos.z" type="range" min="-3000" max="0" step="0.1" value="0" />
-            </label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Rotation</legend>
-
-            <label>
-                X <input name="mesh.rotation.x" type="range" min="-360" max="360" step="0.1" />
-            </label>
-
-            <label>
-                Y <input name="mesh.rotation.y" type="range" min="-360" max="360" step="0.1" />
-            </label>
-
-            <label>
-                Z <input name="mesh.rotation.z" type="range" min="-360" max="360" step="0.1" />
-            </label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Scale</legend>
-
-            <label>
-                X <input name="mesh.scale.x" type="range" min="0" max="10" step=".1" />
-            </label>
-
-            <label>
-                Y <input name="mesh.scale.y" type="range" min="0" max="10" step=".1" />
-            </label>
-
-            <label>
-                Z <input name="mesh.scale.z" type="range" min="0" max="10" step=".1" />
-            </label>
-        </fieldset>
-
-        <fieldset>
-            <legend>Camera</legend>
-
-            <label>
-                FOV <input name="camera.fov" type="range" min="1" max="40" step="0.1" />
-            </label>
+            <legend>Mesh</legend>
 
             <fieldset>
                 <legend>Position</legend>
 
                 <label>
-                    X <input name="camera.pos.x" type="range" min="-50" max="50" step="0.1" />
+                    X <input name="mesh.pos.x" type="range" min="-100" max="100" step="0.1" value="0" />
+                </label>
+
+                <label>
+                    Y <input name="mesh.pos.y" type="range" min="-100" max="100" step="0.1" value="0" />
+                </label>
+
+                <label>
+                    Z <input name="mesh.pos.z" type="range" min="0" max="500" step="0.1" value="0" />
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Rotation</legend>
+
+                <label>
+                    X <input name="mesh.rotation.x" type="range" min="-360" max="360" step="0.1" />
+                </label>
+
+                <label>
+                    Y <input name="mesh.rotation.y" type="range" min="-360" max="360" step="0.1" />
+                </label>
+
+                <label>
+                    Z <input name="mesh.rotation.z" type="range" min="-360" max="360" step="0.1" />
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Scale</legend>
+
+                <label>
+                    X <input name="mesh.scale.x" type="range" min="0" max="10" step=".1" />
+                </label>
+
+                <label>
+                    Y <input name="mesh.scale.y" type="range" min="0" max="10" step=".1" />
+                </label>
+
+                <label>
+                    Z <input name="mesh.scale.z" type="range" min="0" max="10" step=".1" />
+                </label>
+            </fieldset>
+        </fieldset>
+
+        <fieldset>
+            <legend>Camera</legend>
+
+            <fieldset>
+                <legend>Position</legend>
+
+                <label>
+                    X <input name="camera.pos.x" type="range" min="-50" max="50" step="-0.1" />
                 </label>
 
                 <label>
@@ -104,7 +104,19 @@
                 </label>
 
                 <label>
-                    Z <input name="camera.pos.z" type="range" min="-1000" max="1000" step="0.1" />
+                    Z <input name="camera.pos.z" type="range" min="-1000" max="0" step="0.1" />
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Perspective</legend>
+
+                <label>
+                    FOV <input name="camera.fov" type="range" min="1" max="40" step="0.1" />
+                </label>
+
+                <label>
+                    Zoom <input name="camera.zoom" type="range" min="1" max="100" step="0.1" />
                 </label>
             </fieldset>
         </fieldset>

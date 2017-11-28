@@ -49,22 +49,20 @@ function createWireframeDrawer(canvas) {
 }
 
 async function main() {
-    const triangles = await fetch('./model/triangles.json').then(r => r.json());
-
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
     const renderer = new Renderer(canvas);
 
-    const mesh = createMesh(triangles);
+    const mesh = await fetch('./model/triangle.json').then(r => r.json()).then(createMesh);
     const camera = new Camera();
 
     UIControl({mesh, camera});
 
 
     function loop(time) {
-        mesh.rotation.y = time / 600;
-        mesh.rotation.x = Math.sin(time / 3000) / 2;
+        //mesh.rotation.y = time / 600;
+        //mesh.rotation.x = Math.sin(time / 3000) / 2;
         render();
         requestAnimationFrame(loop);
     }

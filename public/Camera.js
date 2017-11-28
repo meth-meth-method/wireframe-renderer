@@ -5,5 +5,6 @@ export class Camera extends Object3d
     constructor() {
         super();
         this.fov = 40;
+        this.zoom = 50;
     }
 }

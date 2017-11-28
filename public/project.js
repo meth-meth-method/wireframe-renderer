@@ -25,7 +25,7 @@ export function createProjector(canvas) {
 
         perspective(vertex, camera.fov);
 
-        zoom(vertex, ((canvas.width + canvas.height) / 2) / 80);
+        zoom(vertex, ((canvas.width + canvas.height) / 2) / camera.zoom);
 
         center(vertex, canvas);
     }
