@@ -8,16 +8,11 @@ import {Vector} from './Vector.js';
 import {transform} from './transform.js';
 import {project} from './project.js';
 
-function drawMesh(mesh, context) {
-    context.strokeStyle = '#fff';
-    mesh.faces.forEach(face => {
-        drawTriangle(face.projected, context);
-    });
-}
 
 function drawTriangle(vertices, context) {
     const first = vertices[0];
 
+    context.strokeStyle = '#fff';
     context.beginPath();
     context.moveTo(first.x, first.y);
     vertices.forEach((vert, index) => {
@@ -54,9 +49,10 @@ async function main() {
                 transform(projected, mesh);
                 project(projected, camera, canvas);
             });
+
+            drawTriangle(face.projected, context);
         }
 
-        drawMesh(mesh, context);
     }
 
     loop();
