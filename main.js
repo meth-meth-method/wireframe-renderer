@@ -1,4 +1,4 @@
-import {meshControl} from './control.js';
+import {meshControl, cameraControl} from './control.js';
 
 class Vector {
     constructor(x = 0, y = 0, z = 0) {
@@ -219,6 +219,7 @@ async function main() {
     meshControl(mesh);
 
     const camera = new Camera();
+    cameraControl(camera);
 
     function loop(time) {
         mesh.rotation.y = time / 600;

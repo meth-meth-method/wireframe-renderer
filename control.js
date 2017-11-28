@@ -7,3 +7,18 @@ export function meshControl(mesh) {
         });
     });
 }
+
+export function cameraControl(camera) {
+    const inputs = document.querySelectorAll('input.camera');
+    [...inputs].forEach(input => {
+        const trail = input.name.split('.');
+        const prop = trail.pop();
+        const obj = trail.reduce((obj, prop) => {
+            return obj[prop];
+        }, camera);
+
+        input.addEventListener('input', event => {
+            obj[prop] = parseFloat(event.target.value);
+        });
+    });
+}
