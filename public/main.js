@@ -9,10 +9,10 @@ import {transform} from './transform.js';
 import {project} from './project.js';
 
 
-function drawTriangle(vertices, context) {
+function drawTriangle(vertices, context, color = '#fff') {
     const first = vertices[0];
 
-    context.strokeStyle = '#fff';
+    context.strokeStyle = color;
     context.beginPath();
     context.moveTo(first.x, first.y);
     vertices.forEach((vert, index) => {
@@ -30,7 +30,6 @@ async function main() {
     const camera = new Camera();
 
     UIControl({mesh, camera});
-
 
     function loop(time) {
         mesh.rotation.y = time / 600;
@@ -52,7 +51,7 @@ async function main() {
                 triangle.push(projected);
             }
 
-            drawTriangle(triangle, context);
+            drawTriangle(triangle, context, face.color);
         }
 
     }
