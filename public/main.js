@@ -49,7 +49,7 @@ function createWireframeDrawer(canvas) {
 }
 
 async function main() {
-    const triangles = await fetch('./triangles.json').then(r => r.json());
+    const triangles = await fetch('./model/triangles.json').then(r => r.json());
 
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
