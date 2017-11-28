@@ -1,12 +1,6 @@
 import {UIControl} from './control.js';
+import {Face} from './Face.js';
 import {Vector} from './Vector.js';
-
-class Face {
-    constructor(vertices) {
-        this.vertices = vertices;
-        this.projected = vertices.map(_ => new Vector());
-    }
-}
 
 class Object3d
 {
