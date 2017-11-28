@@ -68,7 +68,10 @@ class Renderer {
     }
 
     render(mesh, camera) {
-        var face, verts, i, j;
+        this.transformVertices(mesh);
+        this.projectVertices(mesh, camera);
+
+        /*var face, verts, i, j;
         mesh.faces.forEach(face => {
             verts = face.projected;
             for (j = 0; j < 3; ++j) {
@@ -77,7 +80,7 @@ class Renderer {
 
             this.transformVertices(verts, mesh);
             this.projectVertices(verts, camera);
-        });
+        });*/
 
         this.drawMesh(mesh);
     }
@@ -120,10 +123,10 @@ function createTransformer() {
 
     let r, s, o, p;
 
-    function transformVertex(v) {
-        v.x = v.x - o.x;
-        v.y = v.y - o.y;
-        v.z = v.z - o.z;
+    function transformVertex(f, v) {
+        v.x = f.x - o.x;
+        v.y = f.y - o.y;
+        v.z = f.z - o.z;
 
         v.x = v.x * s.x;
         v.y = v.y * s.y;
@@ -149,7 +152,7 @@ function createTransformer() {
         v.z = v.z + p.z;
     }
 
-    return function transformVertices(vertices, mesh) {
+    return function transformVertices(mesh) {
         o = mesh.origin;
         p = mesh.pos;
         r = mesh.rotate;
@@ -164,9 +167,12 @@ function createTransformer() {
         cosZ = Math.cos(r.z);
         sinZ = Math.sin(r.z);
 
-        for (let v of vertices) {
-            transformVertex(v);
-        }
+        mesh.faces.forEach(face => {
+            face.vertices.forEach((vertex, index) => {
+                const projected = face.projected[index];
+                transformVertex(vertex, projected);
+            });
+        });
     }
 }
 
@@ -191,10 +197,14 @@ function createProjector(canvas) {
         vertex.y += h;
     }
 
-    return function projectVertices(vertices, camera) {
+    return function projectVertices(mesh, camera) {
         pos = camera.pos;
         fov = camera.fov;
-        vertices.forEach(projectVertex);
+        mesh.faces.forEach(face => {
+            face.projected.forEach((vertex) => {
+                projectVertex(vertex);
+            });
+        });
     }
 }
 
