@@ -5,6 +5,10 @@ export class Vector {
         this.z = z;
     }
 
+    clone() {
+        return new Vector(this.x, this.y, this.z);
+    }
+
     copy(vertex) {
         this.x = vertex.x;
         this.y = vertex.y;
