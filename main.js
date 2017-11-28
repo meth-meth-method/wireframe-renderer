@@ -110,10 +110,17 @@ function createTransformer() {
 
     let r, s, o, p;
 
+    function offsetFromOrigin(vertex, origin) {
+        vertex.x -= origin.x;
+        vertex.y -= origin.y;
+        vertex.z -= origin.z;
+    }
+
+
     function transformVertex(f, v) {
-        v.x = f.x - o.x;
-        v.y = f.y - o.y;
-        v.z = f.z - o.z;
+        v.copy(f);
+
+        offsetFromOrigin(v, o);
 
         v.x = v.x * s.x;
         v.y = v.y * s.y;
