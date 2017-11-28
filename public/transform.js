@@ -49,16 +49,9 @@ function rotate(vertex, rotation) {
     vertex.y = temp2;
 }
 
-export function transform(mesh) {
-    for (const face of mesh.faces) {
-        let index = 0;
-        for (const vertex of face.projected) {
-            vertex.copy(face.vertices[index++]);
-
-            offset(vertex, mesh.origin);
-            scale(vertex, mesh.scale);
-            rotate(vertex, mesh.rotation);
-            move(vertex, mesh.pos);
-        }
-    }
+export function transform(vertex, mesh) {
+    offset(vertex, mesh.origin);
+    scale(vertex, mesh.scale);
+    rotate(vertex, mesh.rotation);
+    move(vertex, mesh.pos);
 }

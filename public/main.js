@@ -48,12 +48,12 @@ async function main() {
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        transform(mesh);
-
         for (const face of mesh.faces) {
-            for (const vertex of face.projected) {
-                project(vertex, camera, canvas);
-            }
+            face.projected.forEach((projected, index) => {
+                projected.copy(face.vertices[index]);
+                transform(projected, mesh);
+                project(projected, camera, canvas);
+            });
         }
 
         drawMesh(mesh, context);
