@@ -108,7 +108,7 @@ function createTransformer() {
 
     let t1, t2;
 
-    let r, s, o, p;
+    let rotate, s, o, p;
 
     function offset(vertex, origin) {
         vertex.x -= origin.x;
@@ -155,17 +155,17 @@ function createTransformer() {
     return function transformVertices(mesh) {
         o = mesh.origin;
         p = mesh.pos;
-        r = mesh.rotate;
+        rotate = mesh.rotate;
         s = mesh.scale;
 
-        cosX = Math.cos(r.x);
-        sinX = Math.sin(r.x);
+        cosX = Math.cos(rotate.x);
+        sinX = Math.sin(rotate.x);
 
-        cosY = Math.cos(r.y);
-        sinY = Math.sin(r.y);
+        cosY = Math.cos(rotate.y);
+        sinY = Math.sin(rotate.y);
 
-        cosZ = Math.cos(r.z);
-        sinZ = Math.sin(r.z);
+        cosZ = Math.cos(rotate.z);
+        sinZ = Math.sin(rotate.z);
 
         for (const face of mesh.faces) {
             let index = 0;
