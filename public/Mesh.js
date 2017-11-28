@@ -11,12 +11,13 @@ export class Mesh extends Object3d
     }
 }
 
-export function createMesh(spec) {
-    const triangles = spec.map(triangle => {
-        return new Face(triangle.map(([x, y, z]) => {
-            return new Vector(x, y, z);
-        }));
+export function createMesh(meshSpec) {
+    const faces = meshSpec.map(faceSpec => {
+        const vertices = faceSpec.verts.map(([x, y, z]) => new Vector(x, y, z));
+        const face = new Face(vertices);
+        face.color = faceSpec.color;
+        return face;
     });
 
-    return new Mesh(triangles);
+    return new Mesh(faces);
 }
