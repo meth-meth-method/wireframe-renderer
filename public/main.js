@@ -5,7 +5,7 @@ import {Mesh, createMesh} from './Mesh.js';
 import {Object3d} from './Object3d.js';
 import {Vector} from './Vector.js';
 
-import {createTransformer} from './transform.js';
+import {transform} from './transform.js';
 import {project} from './project.js';
 
 class Renderer {
@@ -13,7 +13,6 @@ class Renderer {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
 
-        this.transformVertices = createTransformer();
         this.drawMesh = createWireframeDrawer(this.canvas);
     }
 
@@ -22,7 +21,7 @@ class Renderer {
     }
 
     render(mesh, camera) {
-        this.transformVertices(mesh);
+        transform(mesh);
 
         for (const face of mesh.faces) {
             for (const vertex of face.projected) {
