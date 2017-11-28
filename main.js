@@ -154,12 +154,12 @@ function createTransformer() {
         cosZ = Math.cos(r.z);
         sinZ = Math.sin(r.z);
 
-        mesh.faces.forEach(face => {
+        for (const face of mesh.faces) {
             face.vertices.forEach((vertex, index) => {
                 const projected = face.projected[index];
                 transformVertex(vertex, projected);
             });
-        });
+        }
     }
 }
 
