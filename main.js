@@ -155,10 +155,10 @@ function createTransformer() {
         sinZ = Math.sin(r.z);
 
         for (const face of mesh.faces) {
-            face.vertices.forEach((vertex, index) => {
-                const projected = face.projected[index];
-                transformVertex(vertex, projected);
-            });
+            let index = 0;
+            for (const vertex of face.vertices) {
+                transformVertex(vertex, face.projected[index++]);
+            }
         }
     }
 }
