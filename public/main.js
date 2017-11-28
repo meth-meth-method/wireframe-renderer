@@ -32,7 +32,7 @@ async function main() {
     UIControl({mesh, camera});
 
     function loop(time) {
-        mesh.rotation.y = time / 600;
+        mesh.rotation.y = time / 1000;
         //mesh.rotation.x = Math.sin(time / 3000) / 2;
 
         draw();

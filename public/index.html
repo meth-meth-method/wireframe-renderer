@@ -26,6 +26,10 @@
             display: flex;
         }
 
+        input[type=range] {
+            width: 300px;
+        }
+
         label {
             align-items: center;
             display: flex;
@@ -60,15 +64,15 @@
                 <legend>Rotation</legend>
 
                 <label>
-                    X <input name="mesh.rotation.x" type="range" min="-360" max="360" step="0.1" />
+                    X <input name="mesh.rotation.x" type="range" min="-3" max="3" step="0.01" />
                 </label>
 
                 <label>
-                    Y <input name="mesh.rotation.y" type="range" min="-360" max="360" step="0.1" />
+                    Y <input name="mesh.rotation.y" type="range" min="-3" max="3" step="0.01" />
                 </label>
 
                 <label>
-                    Z <input name="mesh.rotation.z" type="range" min="-360" max="360" step="0.1" />
+                    Z <input name="mesh.rotation.z" type="range" min="-3" max="3" step="0.01" />
                 </label>
             </fieldset>
 
