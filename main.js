@@ -222,7 +222,8 @@ async function main() {
     const camera = new Camera();
 
     function loop(time) {
-        mesh.rotate.y = time / 300;
+        mesh.rotate.y = time / 600;
+        mesh.rotate.x = Math.sin(time / 3000) / 2;
         render();
         requestAnimationFrame(loop);
     }
