@@ -6,14 +6,13 @@ import {Object3d} from './Object3d.js';
 import {Vector} from './Vector.js';
 
 import {createTransformer} from './transform.js';
-import {createProjector} from './project.js';
+import {project} from './project.js';
 
 class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
         this.context = canvas.getContext('2d');
 
-        this.projectVertices = createProjector(canvas);
         this.transformVertices = createTransformer();
         this.drawMesh = createWireframeDrawer(this.canvas);
     }
@@ -24,7 +23,12 @@ class Renderer {
 
     render(mesh, camera) {
         this.transformVertices(mesh);
-        this.projectVertices(mesh, camera);
+
+        for (const face of mesh.faces) {
+            for (const vertex of face.projected) {
+                project(vertex, camera, this.canvas);
+            }
+        }
 
         this.drawMesh(mesh);
     }
