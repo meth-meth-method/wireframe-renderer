@@ -103,10 +103,7 @@ function createWireframeDrawer(canvas) {
 
 function createTransformer() {
     const sin = new Vector();
-
-    let cosX,
-        cosY,
-        cosZ;
+    const cos = new Vector();
 
     let t1, t2;
 
@@ -136,18 +133,18 @@ function createTransformer() {
         offset(v, o);
         scale(v, s);
 
-        t1 = cosX * v.y + sin.x * v.z;
-        t2 = -sin.x * v.y + cosX * v.z;
+        t1 = cos.x * v.y + sin.x * v.z;
+        t2 = -sin.x * v.y + cos.x * v.z;
         v.y = t1;
         v.z = t2;
 
-        t1 = cosY * v.x + sin.y * v.z;
-        t2 = -sin.y * v.x + cosY * v.z;
+        t1 = cos.y * v.x + sin.y * v.z;
+        t2 = -sin.y * v.x + cos.y * v.z;
         v.x = t1;
         v.z = t2;
 
-        t1 = cosZ * v.x + sin.z * v.y;
-        t2 = -sin.z * v.x + cosZ * v.y;
+        t1 = cos.z * v.x + sin.z * v.y;
+        t2 = -sin.z * v.x + cos.z * v.y;
         v.x = t1;
         v.y = t2;
 
@@ -160,13 +157,13 @@ function createTransformer() {
         rotate = mesh.rotate;
         s = mesh.scale;
 
-        cosX = Math.cos(rotate.x);
+        cos.x = Math.cos(rotate.x);
         sin.x = Math.sin(rotate.x);
 
-        cosY = Math.cos(rotate.y);
+        cos.y = Math.cos(rotate.y);
         sin.y = Math.sin(rotate.y);
 
-        cosZ = Math.cos(rotate.z);
+        cos.z = Math.cos(rotate.z);
         sin.z = Math.sin(rotate.z);
 
         for (const face of mesh.faces) {
