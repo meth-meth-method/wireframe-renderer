@@ -168,35 +168,34 @@ function createTransformer() {
 
 function createProjector(canvas) {
     const scale = canvas.height / 80;
-    const w = canvas.width / 2;
-    const h = canvas.height / 2;
-    let pos, fov;
 
     function offset(vertex, offset) {
-        vertex.x -= pos.x;
-        vertex.y -= pos.y;
-        vertex.z -= pos.z;
+        vertex.x -= offset.x;
+        vertex.y -= offset.y;
+        vertex.z -= offset.z;
     }
 
-    function projectVertex(vertex) {
-        offset(vertex, pos);
+    function center(vertex, canvas) {
+        vertex.x += canvas.width / 2;
+        vertex.y += canvas.height / 2;
+    }
 
-        vertex.x /= (vertex.z + fov) * (1 / fov);
-        vertex.y /= (vertex.z + fov) * (1 / fov);
+    function projectVertex(vertex, camera) {
+        offset(vertex, camera.pos);
+
+        vertex.x /= (vertex.z + camera.fov) * (1 / camera.fov);
+        vertex.y /= (vertex.z + camera.fov) * (1 / camera.fov);
 
         vertex.x *= scale;
         vertex.y *= scale;
 
-        vertex.x += w;
-        vertex.y += h;
+        center(vertex, canvas);
     }
 
     return function projectVertices(mesh, camera) {
-        pos = camera.pos;
-        fov = camera.fov;
         mesh.faces.forEach(face => {
             face.projected.forEach((vertex) => {
-                projectVertex(vertex);
+                projectVertex(vertex, camera);
             });
         });
     }
