@@ -102,8 +102,6 @@ function createWireframeDrawer(canvas) {
 }
 
 function createTransformer() {
-    let r, s, o, p;
-
     function offset(vertex, origin) {
         vertex.x -= origin.x;
         vertex.y -= origin.y;
