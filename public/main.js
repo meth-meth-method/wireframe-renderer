@@ -11,6 +11,11 @@ function drawPolygon(polygon, context, color = '#fff') {
     context.stroke();
 }
 
+const center = (vertex, canvas) => ({
+    x: vertex.x + canvas.width / 2,
+    y: vertex.y + canvas.height /2,
+});
+
 async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
@@ -27,7 +32,9 @@ async function main() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         for (const polygon of mesh) {
-            drawPolygon(polygon, context, '#fff');
+            const transformedPolygon = polygon.map(vertex => center(vertex, canvas));
+            console.log(transformedPolygon);
+            drawPolygon(transformedPolygon, context, '#fff');
         }
 
     }
