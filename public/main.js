@@ -9,7 +9,7 @@ import {transform} from './transform.js';
 import {project} from './project.js';
 
 
-function drawTriangle(vertices, context, color = '#fff') {
+function drawPolygon(vertices, context, color = '#fff') {
     const first = vertices[0];
 
     context.strokeStyle = color;
@@ -51,7 +51,7 @@ async function main() {
                 triangle.push(projected);
             }
 
-            drawTriangle(triangle, context, face.color);
+            drawPolygon(triangle, context, face.color);
         }
 
     }
