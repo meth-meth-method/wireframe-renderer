@@ -1,20 +1,10 @@
-import {UIControl} from './control.js';
-import {Camera} from './Camera.js';
-import {Mesh, createMesh} from './Mesh.js';
-import {Object3d} from './Object3d.js';
-import {Vector} from './Vector.js';
-
-import {transform} from './transform.js';
-import {project} from './project.js';
-
-
-function drawPolygon(vertices, context, color = '#fff') {
-    const first = vertices[0];
+function drawPolygon(polygon, context, color = '#fff') {
+    const first = polygon[0];
 
     context.strokeStyle = color;
     context.beginPath();
     context.moveTo(first.x, first.y);
-    vertices.forEach((vert, index) => {
+    polygon.forEach((vert, index) => {
         context.lineTo(vert.x, vert.y);
     });
     context.lineTo(first.x, first.y);
@@ -25,37 +15,24 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    const mesh = await fetch('./model/cube.json').then(r => r.json()).then(createMesh);
-    const camera = new Camera();
-
-    UIControl({mesh, camera});
-
-    function loop(time) {
-        mesh.rotation.y = time / 1000;
-        //mesh.rotation.x = Math.sin(time / 3000) / 2;
-
-        draw();
-        requestAnimationFrame(loop);
-    }
+    const mesh = await fetch('./model/cube.json')
+        .then(respons => respons.json())
+        .then(mesh => {
+            return mesh.map(poly => {
+                return poly.map(([x, y, z]) => ({x, y, z}));
+            });
+        });
 
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (const polygon of mesh.polygons) {
-            const triangle = [];
-            for (const vertex of polygon) {
-                const projected = vertex.clone();
-                transform(projected, mesh);
-                project(projected, camera, canvas);
-                triangle.push(projected);
-            }
-
-            drawPolygon(triangle, context, polygon.color);
+        for (const polygon of mesh) {
+            drawPolygon(polygon, context, '#fff');
         }
 
     }
 
-    loop();
+    draw();
 }
 
 main();

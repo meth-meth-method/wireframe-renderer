@@ -4,9 +4,6 @@
     <style type="text/css">
         body {
             background: #000;
-            color: #e0e0e0;
-            font-family: sans-serif;
-            font-size: 10px;
             margin: 0;
         }
 
@@ -15,115 +12,10 @@
             image-rendering: pixelated;
             width: 100vw;
         }
-
-        .controls {
-            display: flex;
-            flex-flow: row wrap;
-        }
-
-        fieldset {
-            border: none;
-            display: flex;
-        }
-
-        input[type=range] {
-            width: 300px;
-        }
-
-        label {
-            align-items: center;
-            display: flex;
-        }
     </style>
     <script type="module" src="main.js"></script>
 </head>
 <body>
     <canvas width="320" height="160"></canvas>
-
-    <section class="controls">
-        <fieldset>
-            <legend>Mesh</legend>
-
-            <fieldset>
-                <legend>Position</legend>
-
-                <label>
-                    X <input name="mesh.pos.x" type="range" min="-100" max="100" step="0.1" value="0" />
-                </label>
-
-                <label>
-                    Y <input name="mesh.pos.y" type="range" min="-100" max="100" step="0.1" value="0" />
-                </label>
-
-                <label>
-                    Z <input name="mesh.pos.z" type="range" min="0" max="500" step="0.1" value="0" />
-                </label>
-            </fieldset>
-
-            <fieldset>
-                <legend>Rotation</legend>
-
-                <label>
-                    X <input name="mesh.rotation.x" type="range" min="-3" max="3" step="0.01" />
-                </label>
-
-                <label>
-                    Y <input name="mesh.rotation.y" type="range" min="-3" max="3" step="0.01" />
-                </label>
-
-                <label>
-                    Z <input name="mesh.rotation.z" type="range" min="-3" max="3" step="0.01" />
-                </label>
-            </fieldset>
-
-            <fieldset>
-                <legend>Scale</legend>
-
-                <label>
-                    X <input name="mesh.scale.x" type="range" min="0" max="10" step=".1" />
-                </label>
-
-                <label>
-                    Y <input name="mesh.scale.y" type="range" min="0" max="10" step=".1" />
-                </label>
-
-                <label>
-                    Z <input name="mesh.scale.z" type="range" min="0" max="10" step=".1" />
-                </label>
-            </fieldset>
-        </fieldset>
-
-        <fieldset>
-            <legend>Camera</legend>
-
-            <fieldset>
-                <legend>Position</legend>
-
-                <label>
-                    X <input name="camera.pos.x" type="range" min="-50" max="50" step="-0.1" />
-                </label>
-
-                <label>
-                    Y <input name="camera.pos.y" type="range" min="-50" max="50" step="0.1" />
-                </label>
-
-                <label>
-                    Z <input name="camera.pos.z" type="range" min="-1000" max="0" step="0.1" />
-                </label>
-            </fieldset>
-
-            <fieldset>
-                <legend>Perspective</legend>
-
-                <label>
-                    FOV <input name="camera.fov" type="range" min="1" max="100" step="0.1" />
-                </label>
-
-                <label>
-                    Zoom <input name="camera.zoom" type="range" min="1" max="200" step="0.1" />
-                </label>
-            </fieldset>
-        </fieldset>
-    </section>
 </body>
 </html>
