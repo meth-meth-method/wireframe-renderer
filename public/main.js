@@ -11,10 +11,11 @@ function drawPolygon(polygon, context, color = '#fff') {
     context.stroke();
 }
 
-const center = (vertex, canvas) => ({
-    x: vertex.x + canvas.width / 2,
-    y: vertex.y + canvas.height /2,
+const center = ({x, y}, canvas) => ({
+    x: x + canvas.width / 2,
+    y: y + canvas.height /2,
 });
+
 
 async function main() {
     const canvas = document.querySelector('canvas');
