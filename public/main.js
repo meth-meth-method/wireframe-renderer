@@ -26,7 +26,7 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    const mesh = await fetch('./model/pyramid.json').then(r => r.json()).then(createMesh);
+    const mesh = await fetch('./model/cube.json').then(r => r.json()).then(createMesh);
     const camera = new Camera();
 
     UIControl({mesh, camera});
