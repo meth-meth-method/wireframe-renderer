@@ -1,6 +1,5 @@
 import {UIControl} from './control.js';
 import {Camera} from './Camera.js';
-import {Face} from './Face.js';
 import {Mesh, createMesh} from './Mesh.js';
 import {Object3d} from './Object3d.js';
 import {Vector} from './Vector.js';
@@ -42,16 +41,16 @@ async function main() {
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (const face of mesh.faces) {
+        for (const polygon of mesh.polygons) {
             const triangle = [];
-            for (const vertex of face) {
+            for (const vertex of polygon) {
                 const projected = vertex.clone();
                 transform(projected, mesh);
                 project(projected, camera, canvas);
                 triangle.push(projected);
             }
 
-            drawPolygon(triangle, context, face.color);
+            drawPolygon(triangle, context, polygon.color);
         }
 
     }
