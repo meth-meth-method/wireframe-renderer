@@ -40,7 +40,7 @@ async function main() {
 
     const camera = {
         pos: new Vec(0, 0, -500),
-        zoom: 50,
+        zoom: 500,
     };
 
     for (const polygon of mesh) {
