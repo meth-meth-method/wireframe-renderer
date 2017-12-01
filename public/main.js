@@ -27,6 +27,7 @@ async function main() {
 
     const mesh = await fetch('./model/cube.json').then(r => r.json()).then(createMesh);
     const camera = new Camera();
+    camera.pos.z = 30;
 
     UIControl({mesh, camera});
 
