@@ -5,7 +5,7 @@ const square = [
     [-50,  50]
 ];
 
-function toVector(values) {
+function toPoint(values) {
     return {
         x: values[0],
         y: values[1],
@@ -17,7 +17,7 @@ async function main() {
     const context = canvas.getContext('2d');
 
     console.log(square);
-    const polygon = square.map(toVector);
+    const polygon = square.map(toPoint);
     console.log(polygon);
 }
 
