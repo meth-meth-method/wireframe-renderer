@@ -1,15 +1,6 @@
-import {Polygon} from './Polygon.js';
 import {Object3d} from './Object3d.js';
+import {Polygon} from './Polygon.js';
 import {Vector} from './Vector.js';
-
-export class Mesh extends Object3d
-{
-    constructor(polygons) {
-        super();
-        this.polygons = polygons;
-        this.scale = new Vector(1, 1, 1);
-    }
-}
 
 export function createMesh(meshSpec) {
     const polygons = meshSpec.map(faceSpec => {
@@ -20,4 +11,13 @@ export function createMesh(meshSpec) {
     });
 
     return new Mesh(polygons);
+}
+
+export class Mesh extends Object3d
+{
+    constructor(polygons) {
+        super();
+        this.polygons = polygons;
+        this.scale = new Vector(1, 1, 1);
+    }
 }
