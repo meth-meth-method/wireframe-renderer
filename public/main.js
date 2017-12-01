@@ -9,6 +9,10 @@ function toPoint([x, y]) {
     return {x, y};
 }
 
+function toCenter(point, canvas) {
+    point.x += canvas.width / 2;
+}
+
 function drawPolygon(polygon, context, color = '#fff') {
     context.strokeStyle = color;
 
@@ -31,6 +35,10 @@ async function main() {
     console.log(square);
     const polygon = square.map(toPoint);
     console.log(polygon);
+
+    for (const point of polygon) {
+        toCenter(point, canvas);
+    }
 
     drawPolygon(polygon, context);
 }
