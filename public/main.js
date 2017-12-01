@@ -18,6 +18,12 @@ function toCenter(point, canvas) {
     point.y += canvas.height / 2;
 }
 
+function perspective(point, camera) {
+    const fov = point.z + (point.z - camera.pos.z);
+    point.x /= fov;
+    point.y /= fov;
+}
+
 async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
@@ -29,8 +35,13 @@ async function main() {
     });
     console.log(mesh);
 
+    const camera = {
+        pos: new Vec(0, 0, 10),
+    };
+
     for (const polygon of mesh) {
         for (const point of polygon) {
+            perspective(point, camera)
             toCenter(point, canvas);
         }
         drawPolygon(polygon, context);
