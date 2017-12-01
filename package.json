@@ -1,0 +1,16 @@
+{
+  "name": "gifmas2017",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node 1.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^1.6.7",
+    "gifencoder": "^1.1.0"
+  }
+}
