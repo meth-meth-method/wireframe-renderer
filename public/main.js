@@ -1,8 +1,16 @@
 import {square} from './models.js';
 import {drawPolygon} from './draw.js';
 
+class Vec {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
 function toPoint([x, y]) {
-    return {x, y};
+    return new Vec(x, y);
 }
 
 function toCenter(point, canvas) {
