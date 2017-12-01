@@ -1,4 +1,5 @@
 import {cube} from './models.js';
+import {control} from './ui.js';
 import {drawPolygon} from './draw.js';
 
 class Vec {
@@ -50,6 +51,8 @@ async function main() {
         }
         drawPolygon(polygon, context);
     }
+
+    control({camera});
 }
 
 main();
