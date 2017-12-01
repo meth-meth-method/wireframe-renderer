@@ -5,7 +5,6 @@ import {Object3d} from './Object3d.js';
 import {Vector} from './Vector.js';
 
 import {transform} from './transform.js';
-import {project} from './project.js';
 
 
 function drawPolygon(vertices, context, color = '#fff') {
@@ -47,7 +46,7 @@ async function main() {
             for (const vertex of polygon) {
                 const projected = vertex.clone();
                 transform(projected, mesh);
-                project(projected, camera, canvas);
+                camera.project(projected, canvas);
                 triangle.push(projected);
             }
 
