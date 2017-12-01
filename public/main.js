@@ -1,4 +1,4 @@
-import {square} from './models.js';
+import {cube} from './models.js';
 import {drawPolygon} from './draw.js';
 
 class Vec {
@@ -22,7 +22,7 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    console.log(square);
+    console.log(cube);
     const polygon = square.map(toPoint);
     console.log(polygon);
 
