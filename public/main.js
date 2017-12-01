@@ -23,8 +23,11 @@ async function main() {
     const context = canvas.getContext('2d');
 
     console.log(cube);
-    const polygon = square.map(toPoint);
-    console.log(polygon);
+    const mesh = cube.map(square => {
+        const polygon = square.map(toPoint);
+        return polygon;
+    });
+    console.log(mesh);
 
     for (const point of polygon) {
         toCenter(point, canvas);
