@@ -10,12 +10,8 @@ function _perspective(vertex, fov) {
 }
 
 const perspective = (v, c) => {
-    const distance = Math.max(0, c.z - v.z);
-    //const magnitude = (v.z + fov) * (2 / fov);
-    //v.x = v.x * (focalLength / v.z);
-    //v.y = v.y * (focalLength / v.z);
-    v.x = distance * (v.x - c.x) / (v.z + distance) + c.x;
-    v.y = distance * (v.y - c.y) / (v.z + distance) + c.y;
+    v.x /= (v.z + 100) * 0.01;
+    v.y /= (v.z + 100) * 0.01;
 };
 
 function zoom(vertex, factor) {
@@ -33,7 +29,7 @@ export function project(vertex, camera, canvas) {
 
     perspective(vertex, camera.pos);
 
-    zoom(vertex, 1);
+    zoom(vertex, camera.zoom);
 
     center(vertex, canvas);
 }
