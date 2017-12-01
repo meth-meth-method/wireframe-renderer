@@ -29,11 +29,12 @@ async function main() {
     });
     console.log(mesh);
 
-    for (const point of polygon) {
-        toCenter(point, canvas);
+    for (const polygon of mesh) {
+        for (const point of polygon) {
+            toCenter(point, canvas);
+        }
+        drawPolygon(polygon, context);
     }
-
-    drawPolygon(polygon, context);
 }
 
 main();
