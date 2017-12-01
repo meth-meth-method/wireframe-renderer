@@ -11,6 +11,7 @@ function toPoint([x, y]) {
 
 function toCenter(point, canvas) {
     point.x += canvas.width / 2;
+    point.y += canvas.height / 2;
 }
 
 function drawPolygon(polygon, context, color = '#fff') {
