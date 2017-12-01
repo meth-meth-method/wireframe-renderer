@@ -27,7 +27,7 @@ async function main() {
 
     const mesh = await fetch('./model/cube.json').then(r => r.json()).then(createMesh);
     const camera = new Camera();
-    camera.pos.z = 30;
+    camera.pos.z = 50;
 
     function loop(time) {
         //mesh.rotation.y = time / 1000;

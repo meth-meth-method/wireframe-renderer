@@ -10,7 +10,7 @@ function _perspective(vertex, fov) {
 }
 
 const perspective = (v, camera) => {
-    const fov = v.z + (v.z - camera.pos.z) * 0.01;
+    const fov = v.z + (v.z - camera.pos.z);
     v.x /= fov;
     v.y /= fov;
 
