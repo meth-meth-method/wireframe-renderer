@@ -7,7 +7,7 @@ function findProp(address, target) {
     return {object, prop}
 }
 
-export function UIControl(targets) {
+export function UIControl(targets, callback) {
     const inputs = document.querySelectorAll('.controls input');
     [...inputs].forEach(input => {
         const {prop, object} = findProp(input.name, targets);
@@ -15,6 +15,7 @@ export function UIControl(targets) {
             const value = parseFloat(event.target.value);
             object[prop] = value;
             console.log('Setting %s to %f', prop, value);
+            callback();
         });
         input.value = object[prop];
     });

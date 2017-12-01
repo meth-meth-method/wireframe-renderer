@@ -9,9 +9,11 @@ function _perspective(vertex, fov) {
     vertex.y /= (vertex.z + fov) * (1 / fov);
 }
 
-const perspective = (v, c) => {
-    v.x /= (v.z + 100) * 0.01;
-    v.y /= (v.z + 100) * 0.01;
+const perspective = (v, camera) => {
+    const fov = v.z + (v.z - camera.pos.z) * 0.01;
+    v.x /= fov;
+    v.y /= fov;
+
 };
 
 function zoom(vertex, factor) {
@@ -27,7 +29,7 @@ function center(vertex, canvas) {
 export function project(vertex, camera, canvas) {
     offset(vertex, camera.pos);
 
-    perspective(vertex, camera.pos);
+    perspective(vertex, camera);
 
     zoom(vertex, camera.zoom);
 

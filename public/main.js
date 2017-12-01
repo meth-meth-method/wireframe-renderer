@@ -29,15 +29,15 @@ async function main() {
     const camera = new Camera();
     camera.pos.z = 30;
 
-    UIControl({mesh, camera});
-
     function loop(time) {
-        mesh.rotation.y = time / 1000;
+        //mesh.rotation.y = time / 1000;
         //mesh.rotation.x = Math.sin(time / 3000) / 2;
 
         draw();
-        requestAnimationFrame(loop);
+        //requestAnimationFrame(loop);
     }
+
+    UIControl({mesh, camera}, () => loop(performance.now()));
 
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
