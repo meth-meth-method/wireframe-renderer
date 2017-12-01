@@ -22,6 +22,9 @@ function perspective(point, camera) {
     const fov = point.z + (point.z - camera.pos.z);
     point.x /= fov;
     point.y /= fov;
+
+    point.x *= camera.zoom;
+    point.y *= camera.zoom;
 }
 
 async function main() {
@@ -37,6 +40,7 @@ async function main() {
 
     const camera = {
         pos: new Vec(0, 0, -500),
+        zoom: 50,
     };
 
     for (const polygon of mesh) {
