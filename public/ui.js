@@ -15,7 +15,9 @@ export function control(targets, callback) {
             const value = parseFloat(event.target.value);
             object[prop] = value;
             console.log('Setting %s to %f', prop, value);
-            callback();
+            if (callback) {
+                callback();
+            }
         });
         input.value = object[prop];
     });
