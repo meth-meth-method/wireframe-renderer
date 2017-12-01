@@ -9,8 +9,8 @@ class Vec {
     }
 }
 
-function toPoint([x, y]) {
-    return new Vec(x, y);
+function toPoint([x, y, z]) {
+    return new Vec(x, y, z);
 }
 
 function toCenter(point, canvas) {
