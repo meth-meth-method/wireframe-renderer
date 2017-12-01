@@ -1,9 +1,4 @@
-const square = [
-    [-50, -50],
-    [ 50, -50],
-    [ 50,  50],
-    [-50,  50]
-];
+import {square} from './models.js';
 
 function toPoint([x, y]) {
     return {x, y};
