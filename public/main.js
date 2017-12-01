@@ -5,11 +5,8 @@ const square = [
     [-50,  50]
 ];
 
-function toPoint(values) {
-    return {
-        x: values[0],
-        y: values[1],
-    };
+function toPoint([x, y]) {
+    return {x, y};
 }
 
 async function main() {
