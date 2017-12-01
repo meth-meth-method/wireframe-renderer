@@ -36,7 +36,7 @@ async function main() {
     console.log(mesh);
 
     const camera = {
-        pos: new Vec(0, 0, 10),
+        pos: new Vec(0, 0, -500),
     };
 
     for (const polygon of mesh) {
