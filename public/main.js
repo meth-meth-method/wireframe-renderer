@@ -44,15 +44,19 @@ async function main() {
         zoom: 500,
     };
 
-    for (const polygon of mesh) {
-        for (const point of polygon) {
-            perspective(point, camera)
-            toCenter(point, canvas);
+    function draw() {
+        for (const polygon of mesh) {
+            for (const point of polygon) {
+                perspective(point, camera)
+                toCenter(point, canvas);
+            }
+            drawPolygon(polygon, context);
         }
-        drawPolygon(polygon, context);
     }
 
-    control({camera});
+    control({camera}, draw);
+
+    draw();
 }
 
 main();
