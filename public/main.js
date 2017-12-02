@@ -55,7 +55,7 @@ async function main() {
 
     animate();
 
-    control({camera, mesh});
+    control({camera, mesh: scene[0]});
 }
 
 main();
