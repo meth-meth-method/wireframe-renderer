@@ -14,6 +14,14 @@ function createMesh(model) {
     return model.map(toPolygon);
 }
 
+class Vec {
+    constructor(x = 0, y = 0, z = 0) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
 function offset(point, position) {
     point.x += position.x;
     point.y += position.y;
