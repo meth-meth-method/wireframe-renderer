@@ -72,7 +72,7 @@ async function main() {
     }
 
     function animate(time) {
-        camera.pos.x = Math.sin(time);
+        camera.pos.x = Math.sin(time / 300) * 100;
         draw();
         requestAnimationFrame(animate);
     }
