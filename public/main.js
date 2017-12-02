@@ -14,10 +14,15 @@ function createMesh(model) {
     return model.map(toPolygon);
 }
 
+function offset(point, position) {
+    point.x += position.x;
+}
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const mesh = createMesh(cube);
+mesh.position = {x: 20};
 
 const camera = new Camera();
 camera.pos.z = 200;
@@ -25,7 +30,7 @@ camera.zoom = 12;
 
 mesh.forEach(polygon => {
     polygon.forEach(point => {
-        point.x += 20;
+        offset(point, mesh.position);
 
         camera.project(point);
     });
