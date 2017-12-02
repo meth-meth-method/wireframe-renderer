@@ -12,7 +12,7 @@ const camera = new Camera();
 camera.pos.z = 200;
 camera.zoom = 12;
 
-function drawMesh(mesh) {
+function drawMesh(mesh, camera) {
     for (const polygon of mesh) {
         polygon.forEach(point => {
             mesh.transform(point);
@@ -31,7 +31,7 @@ function animate(time) {
     mesh.rotation.y += 0.01;
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawMesh(mesh);
+    drawMesh(mesh, camera);
     requestAnimationFrame(animate);
 }
 
