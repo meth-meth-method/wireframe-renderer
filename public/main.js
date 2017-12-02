@@ -27,12 +27,10 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    console.log(cube);
     const mesh = cube.map(square => {
         const polygon = square.map(toPoint);
         return polygon;
     });
-    console.log(mesh);
 
     const camera = {
         pos: new Vec(0, 0, -500),
