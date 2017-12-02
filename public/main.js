@@ -9,6 +9,18 @@ function toCenter(point, canvas) {
     point.y += canvas.height / 2;
 }
 
+class Camera {
+    constructor() {
+        this.pos = new Vec(0, 0, -500);
+        this.zoom = 25;
+    }
+
+    project(point) {
+        offset(point, this.pos);
+        perspective(point, this);
+    }
+}
+
 function perspective(point, camera) {
     const fov = point.z + (point.z - camera.pos.z);
     point.x /= fov;
@@ -35,10 +47,7 @@ async function main() {
     }));
 
 
-    const camera = {
-        pos: new Vec(0, 0, -500),
-        zoom: 25,
-    };
+    const camera = new Camera();
 
 
     function draw() {
@@ -50,8 +59,8 @@ async function main() {
                 .map(point => {
                     mesh.transform(point);
 
-                    offset(point, camera.pos);
-                    perspective(point, camera);
+                    camera.project(point);
+
                     toCenter(point, canvas);
                     return point;
                 });
