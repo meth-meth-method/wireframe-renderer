@@ -1,6 +1,8 @@
+import {Vec} from './math.js';
+
 export class Camera {
     constructor() {
-        this.pos = {z: 100};
+        this.pos = new Vec(0, 0, 100);
         this.zoom = 8;
     }
 
