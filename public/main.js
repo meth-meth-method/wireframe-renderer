@@ -48,7 +48,12 @@ async function main() {
 
 
     function animate(time) {
-        camera.pos.x = Math.sin(time / 300) * 100;
+        //camera.pos.x = Math.sin(time / 300) * 100;
+        scene.forEach((mesh, index) => {
+            mesh.rotation.x += (index + 1) * 0.01;
+            mesh.rotation.y += (index + 1) * 0.01;
+        });
+
         draw(scene);
         requestAnimationFrame(animate);
     }
