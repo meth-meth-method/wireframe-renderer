@@ -19,6 +19,8 @@ async function main() {
         Mesh.create(cube),
     ];
 
+    scene[0].scale.x = 2;
+    scene[0].scale.y = 2;
 
     const camera = new Camera();
 
