@@ -35,6 +35,12 @@ function rotate(point, rotation) {
     point.y = temp2;
 }
 
+function rescale(point, scale) {
+    point.x *= scale.x;
+    point.y *= scale.y;
+    point.z *= scale.z;
+}
+
 
 function toCenter(point, canvas) {
     point.x += canvas.width / 2;
@@ -66,6 +72,7 @@ async function main() {
         return polygon;
     });
 
+    const scale = new Vec(1, 1, 1);
     const rotation = new Vec(0, 0, 0);
 
 
@@ -82,7 +89,9 @@ async function main() {
             const projectedPolygon = polygon
                 .map(point => point.clone())
                 .map(point => {
-                    rotate(point, rotation)
+                    rotate(point, rotation);
+                    rescale(point, scale);
+
                     offset(point, camera.pos);
                     perspective(point, camera);
                     toCenter(point, canvas);
@@ -101,7 +110,7 @@ async function main() {
 
     animate();
 
-    control({camera, mesh: {rotation}});
+    control({camera, mesh: {rotation, scale}});
 }
 
 main();
