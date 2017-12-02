@@ -42,4 +42,10 @@ function drawMesh(mesh) {
     });
 }
 
-drawMesh(mesh);
+function animate(time) {
+    mesh.position.x += 0.1;
+    drawMesh(mesh);
+    requestAnimationFrame(animate);
+}
+
+animate();
