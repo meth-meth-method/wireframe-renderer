@@ -20,6 +20,8 @@ const context = canvas.getContext('2d');
 const mesh = createMesh(cube);
 
 const camera = new Camera();
+camera.pos.z = 200;
+camera.zoom = 12;
 
 mesh.forEach(polygon => {
     polygon.forEach(point => {
