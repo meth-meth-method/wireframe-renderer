@@ -6,7 +6,9 @@ import {createMesh} from './mesh.js';
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
-const mesh = createMesh(pyramid);
+const mesh1 = createMesh(pyramid);
+const mesh2 = createMesh(cube);
+const scene = [mesh1, mesh2];
 
 const camera = new Camera();
 camera.pos.z = 200;
@@ -24,14 +26,15 @@ function drawMesh(mesh, camera) {
 }
 
 function animate(time) {
+    const mesh = scene[0];
     mesh.position.x = Math.sin(time / 1000) * 100;
     mesh.position.z = Math.sin(time / 1200) * 100;
-
     mesh.rotation.x += 0.01;
     mesh.rotation.y += 0.01;
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    drawMesh(mesh, camera);
+    scene.forEach(mesh => drawMesh(mesh, camera));
+
     requestAnimationFrame(animate);
 }
 
