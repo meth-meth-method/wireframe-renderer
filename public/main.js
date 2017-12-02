@@ -20,6 +20,12 @@ function perspective(point, distance) {
     point.y /= fov;
 }
 
+function zoom(point, factor) {
+    const scale = Math.pow(factor, 2);
+    point.x *= scale;
+    point.y *= scale;
+}
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
@@ -30,7 +36,8 @@ console.log(mesh);
 
 mesh.forEach(polygon => {
     polygon.forEach(point => {
-        perspective(point, 2);
+        perspective(point, 100);
+        zoom(point, 8);
     });
 
     drawPolygon(polygon, context);
