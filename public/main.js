@@ -1,9 +1,10 @@
 import {square, doubleSquare, cube} from './models.js';
 import {drawPolygon} from './draw.js';
 import {Camera} from './camera.js';
+import {Vec} from './math.js';
 
 function toPoint([x, y, z]) {
-    return {x, y, z};
+    return new Vec(x, y, z);
 }
 
 function toPolygon(shape) {
@@ -12,14 +13,6 @@ function toPolygon(shape) {
 
 function createMesh(model) {
     return model.map(toPolygon);
-}
-
-class Vec {
-    constructor(x = 0, y = 0, z = 0) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
 }
 
 function offset(point, position) {
@@ -32,7 +25,7 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const mesh = createMesh(cube);
-mesh.position = {x: 20, y: 30, z: -20};
+mesh.position = new Vec();
 
 const camera = new Camera();
 camera.pos.z = 200;
