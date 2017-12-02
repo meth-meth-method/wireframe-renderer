@@ -47,6 +47,8 @@ function drawMesh(mesh) {
 
 function animate(time) {
     mesh.position.x += 0.1;
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
     drawMesh(mesh);
     requestAnimationFrame(animate);
 }
