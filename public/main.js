@@ -14,11 +14,7 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    const mesh = new Mesh(cube.map(square => {
-        const polygon = square.map(toPoint);
-        return polygon;
-    }));
-
+    const mesh = Mesh.create(cube);
 
     const camera = new Camera();
 

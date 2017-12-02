@@ -1,6 +1,13 @@
-import {Vec} from './math.js';
+import {Vec, toPoint} from './math.js';
 
 export class Mesh {
+    static create(model) {
+        return new Mesh(model.map(shape => {
+            const polygon = shape.map(toPoint);
+            return polygon;
+        }));
+    }
+
     constructor(polygons) {
         this.polygons = polygons;
 
