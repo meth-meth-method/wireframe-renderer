@@ -19,6 +19,8 @@ async function main() {
         Mesh.create(cube),
     ];
 
+    scene[0].color = 'cyan';
+    scene[1].color = 'red';
     scene[0].scale.x = 2;
     scene[0].scale.y = 2;
 
@@ -42,7 +44,7 @@ async function main() {
                     return point;
                 });
 
-            drawPolygon(projectedPolygon, context);
+            drawPolygon(projectedPolygon, context, mesh.color);
         }
     }
 
