@@ -14,14 +14,20 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    const mesh = Mesh.create(cube);
+    const scene = [
+        Mesh.create(cube),
+        Mesh.create(cube),
+    ];
+
 
     const camera = new Camera();
 
-
     function draw() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        scene.forEach(drawMesh);
+    }
 
+    function drawMesh(mesh) {
         for (const polygon of mesh) {
             const projectedPolygon = polygon
                 .map(point => point.clone())
@@ -37,6 +43,7 @@ async function main() {
             drawPolygon(projectedPolygon, context);
         }
     }
+
 
     function animate(time) {
         camera.pos.x = Math.sin(time / 300) * 100;
