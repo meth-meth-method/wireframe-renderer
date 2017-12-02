@@ -30,7 +30,7 @@ console.log(mesh);
 
 mesh.forEach(polygon => {
     polygon.forEach(point => {
-        perspective(point, 1)
+        perspective(point, 2);
     });
 
     drawPolygon(polygon, context);
