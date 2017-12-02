@@ -4,7 +4,6 @@ import {Camera} from './camera.js';
 import {createMesh} from './mesh.js';
 
 const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
 
 const mesh1 = createMesh(pyramid);
 const mesh2 = createMesh(cube);
@@ -14,16 +13,29 @@ const camera = new Camera();
 camera.pos.z = 200;
 camera.zoom = 12;
 
-function drawMesh(mesh, camera) {
-    for (const polygon of mesh) {
-        polygon.forEach(point => {
-            mesh.transform(point);
-            camera.project(point);
-        });
+function createWireframeRenderer(canvas) {
+    const context = canvas.getContext('2d');
 
-        drawPolygon(polygon, context);
+    function drawMesh(mesh, camera) {
+        for (const polygon of mesh) {
+            polygon.forEach(point => {
+                mesh.transform(point);
+                camera.project(point);
+            });
+
+            drawPolygon(polygon, context);
+        }
     }
+
+    return function render(scene, camera) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        scene.forEach(mesh => drawMesh(mesh, camera));
+    };
 }
+
+const render = createWireframeRenderer(canvas);
+
 
 function animate(time) {
     {
@@ -37,13 +49,12 @@ function animate(time) {
     {
         const mesh = scene[1];
         mesh.position.x = Math.sin(time / 500) * 75;
-        mesh.position.z = Math.sin(time / 2000) * 150;
+        mesh.position.z = Math.sin(time / 2000) * 120;
         mesh.rotation.x -= 0.01;
         mesh.rotation.y -= 0.01;
     }
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    scene.forEach(mesh => drawMesh(mesh, camera));
+    render(scene, camera);
 
     requestAnimationFrame(animate);
 }
