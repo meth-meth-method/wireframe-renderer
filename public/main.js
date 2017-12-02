@@ -71,9 +71,15 @@ async function main() {
         }
     }
 
-    control({camera}, draw);
+    function animate(time) {
+        camera.pos.x = Math.sin(time);
+        draw();
+        requestAnimationFrame(animate);
+    }
 
-    draw();
+    animate();
+
+    control({camera});
 }
 
 main();
