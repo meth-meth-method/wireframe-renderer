@@ -24,6 +24,12 @@ class Mesh {
         this.position = new Vec();
     }
 
+    *[Symbol.iterator] () {
+        for (const polygon of this.polygons) {
+            yield polygon.map(point => ({...point}));
+        }
+    }
+
     transform(point) {
         offset(point, this.position);
     }

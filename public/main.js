@@ -13,18 +13,14 @@ camera.pos.z = 200;
 camera.zoom = 12;
 
 function drawMesh(mesh) {
-    mesh.polygons.forEach(polygon => {
-        const projectedPolygon = polygon
-        .map(point => ({...point}))
-        .map(point => {
+    for (const polygon of mesh) {
+        polygon.forEach(point => {
             mesh.transform(point);
-
             camera.project(point);
-            return point;
         });
 
-        drawPolygon(projectedPolygon, context);
-    });
+        drawPolygon(polygon, context);
+    }
 }
 
 function animate(time) {
