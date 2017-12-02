@@ -1,4 +1,4 @@
-import {square, doubleSquare, cube} from './models.js';
+import {square, doubleSquare, cube, pyramid} from './models.js';
 import {drawPolygon} from './draw.js';
 import {Camera} from './camera.js';
 import {createMesh} from './mesh.js';
@@ -6,7 +6,7 @@ import {createMesh} from './mesh.js';
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
-const mesh = createMesh(cube);
+const mesh = createMesh(pyramid);
 
 const camera = new Camera();
 camera.pos.z = 200;
