@@ -1,4 +1,4 @@
-import {square} from './models.js';
+import {square, doubleSquare} from './models.js';
 import {drawPolygon} from './draw.js';
 
 function toPoint([x, y, z]) {
@@ -25,7 +25,7 @@ const context = canvas.getContext('2d');
 
 console.log(square);
 
-const mesh = createMesh(square);
+const mesh = createMesh(doubleSquare);
 console.log(mesh);
 
 mesh.forEach(polygon => {
