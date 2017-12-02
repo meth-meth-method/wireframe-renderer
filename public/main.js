@@ -12,7 +12,7 @@ function toPolygon(shape) {
 }
 
 function createMesh(model) {
-    return model.map(toPolygon);
+    return new Mesh(model.map(toPolygon));
 }
 
 function offset(point, position) {
@@ -21,18 +21,24 @@ function offset(point, position) {
     point.z += position.z;
 }
 
+class Mesh {
+    constructor(polygons) {
+        this.polygons = polygons;
+        this.position = new Vec();
+    }
+}
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const mesh = createMesh(cube);
-mesh.position = new Vec();
 
 const camera = new Camera();
 camera.pos.z = 200;
 camera.zoom = 12;
 
 function drawMesh(mesh) {
-    mesh.forEach(polygon => {
+    mesh.polygons.forEach(polygon => {
         const projectedPolygon = polygon
         .map(point => ({...point}))
         .map(point => {
