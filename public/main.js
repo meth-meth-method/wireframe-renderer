@@ -13,6 +13,10 @@ function createMesh(model) {
 }
 
 function drawPolygon(polygon, context) {
+    polygon.forEach(point => {
+        offsetToCenter(point, context.canvas);
+    });
+
     context.beginPath();
 
     const first = polygon[0];
@@ -26,6 +30,10 @@ function drawPolygon(polygon, context) {
     context.stroke();
 }
 
+function offsetToCenter(point, canvas) {
+    point.x += canvas.width / 2;
+    point.y += canvas.height / 2;
+}
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
