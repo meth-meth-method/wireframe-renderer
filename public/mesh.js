@@ -1,5 +1,6 @@
+import {Vec} from './math.js';
 
-function createMesh(model) {
+export function createMesh(model) {
     return new Mesh(model.map(toPolygon));
 }
 

@@ -1,7 +1,7 @@
 import {square, doubleSquare, cube} from './models.js';
 import {drawPolygon} from './draw.js';
 import {Camera} from './camera.js';
-import {Vec} from './math.js';
+import {createMesh} from './mesh.js';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
