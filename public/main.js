@@ -14,6 +14,12 @@ function createMesh(model) {
 }
 
 
+function perspective(point, distance) {
+    const fov = point.z + distance;
+    point.x /= fov;
+    point.y /= fov;
+}
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
@@ -23,5 +29,9 @@ const mesh = createMesh(square);
 console.log(mesh);
 
 mesh.forEach(polygon => {
+    polygon.forEach(point => {
+        perspective(point, 1)
+    });
+
     drawPolygon(polygon, context);
 });
