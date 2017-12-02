@@ -24,7 +24,7 @@ const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const mesh = createMesh(cube);
-mesh.position = {x: 20, y: 0, z: 0};
+mesh.position = {x: 20, y: 30, z: 0};
 
 const camera = new Camera();
 camera.pos.z = 200;
