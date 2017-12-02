@@ -32,13 +32,16 @@ camera.zoom = 12;
 
 function drawMesh(mesh) {
     mesh.forEach(polygon => {
-        polygon.forEach(point => {
+        const projectedPolygon = polygon
+        .map(point => ({...point}))
+        .map(point => {
             offset(point, mesh.position);
 
             camera.project(point);
+            return point;
         });
 
-        drawPolygon(polygon, context);
+        drawPolygon(projectedPolygon, context);
     });
 }
 
