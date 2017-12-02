@@ -1,4 +1,4 @@
-import {square, doubleSquare} from './models.js';
+import {square, doubleSquare, cube} from './models.js';
 import {drawPolygon} from './draw.js';
 import {Camera} from './camera.js';
 
@@ -17,7 +17,7 @@ function createMesh(model) {
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
-const mesh = createMesh(doubleSquare);
+const mesh = createMesh(cube);
 
 const camera = new Camera();
 
