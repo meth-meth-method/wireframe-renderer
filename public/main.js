@@ -26,6 +26,10 @@ class Mesh {
         this.polygons = polygons;
         this.position = new Vec();
     }
+
+    transform(point) {
+        offset(point, this.position);
+    }
 }
 
 const canvas = document.querySelector('canvas');
@@ -42,7 +46,7 @@ function drawMesh(mesh) {
         const projectedPolygon = polygon
         .map(point => ({...point}))
         .map(point => {
-            offset(point, mesh.position);
+            mesh.transform(point);
 
             camera.project(point);
             return point;
