@@ -24,7 +24,7 @@ async function main() {
 
     const camera = new Camera();
 
-    function draw() {
+    function draw(scene) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         scene.forEach(drawMesh);
     }
@@ -49,7 +49,7 @@ async function main() {
 
     function animate(time) {
         camera.pos.x = Math.sin(time / 300) * 100;
-        draw();
+        draw(scene);
         requestAnimationFrame(animate);
     }
 
