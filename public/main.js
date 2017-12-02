@@ -3,6 +3,25 @@ import {control} from './ui.js';
 import {drawPolygon} from './draw.js';
 import {Vec, toPoint} from './math.js';
 
+class Mesh {
+    constructor(polygons) {
+        this.polygons = polygons;
+
+        this.scale = new Vec(1, 1, 1);
+        this.rotation = new Vec(0, 0, 0);
+    }
+
+    *[Symbol.iterator]() {
+        for (const polygon of this.polygons) {
+            yield polygon;
+        }
+    }
+
+    transform(point) {
+        rotate(point, this.rotation);
+        rescale(point, this.scale);
+    }
+}
 
 function rotate(point, rotation) {
     const sin = new Vec();
@@ -67,13 +86,10 @@ async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
 
-    const mesh = cube.map(square => {
+    const mesh = new Mesh(cube.map(square => {
         const polygon = square.map(toPoint);
         return polygon;
-    });
-
-    const scale = new Vec(1, 1, 1);
-    const rotation = new Vec(0, 0, 0);
+    }));
 
 
     const camera = {
@@ -89,8 +105,7 @@ async function main() {
             const projectedPolygon = polygon
                 .map(point => point.clone())
                 .map(point => {
-                    rotate(point, rotation);
-                    rescale(point, scale);
+                    mesh.transform(point);
 
                     offset(point, camera.pos);
                     perspective(point, camera);
@@ -110,7 +125,7 @@ async function main() {
 
     animate();
 
-    control({camera, mesh: {rotation, scale}});
+    control({camera, mesh});
 }
 
 main();
