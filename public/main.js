@@ -1,40 +1,13 @@
 import {cube} from './models.js';
 import {control} from './ui.js';
 import {drawPolygon} from './draw.js';
+import {Camera} from './camera.js';
 import {Mesh} from './mesh.js';
 import {Vec, toPoint} from './math.js';
 
 function toCenter(point, canvas) {
     point.x += canvas.width / 2;
     point.y += canvas.height / 2;
-}
-
-class Camera {
-    constructor() {
-        this.pos = new Vec(0, 0, -500);
-        this.zoom = 25;
-    }
-
-    project(point) {
-        offset(point, this.pos);
-        perspective(point, this);
-    }
-}
-
-function perspective(point, camera) {
-    const fov = point.z + (point.z - camera.pos.z);
-    point.x /= fov;
-    point.y /= fov;
-
-    const zoom = Math.pow(camera.zoom, 2);
-    point.x *= zoom;
-    point.y *= zoom;
-}
-
-function offset(vertex, pos) {
-    vertex.x -= pos.x;
-    vertex.y -= pos.y;
-    vertex.z -= pos.z;
 }
 
 async function main() {
