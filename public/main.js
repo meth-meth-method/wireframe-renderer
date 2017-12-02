@@ -13,6 +13,17 @@ function createMesh(model) {
     return model.map(toPolygon);
 }
 
+class Camera {
+    constructor() {
+        this.pos = {z: 100};
+        this.zoom = 8;
+    }
+
+    project(point) {
+        perspective(point, this.pos.z);
+        zoom(point, this.zoom);
+    }
+}
 
 function perspective(point, distance) {
     const fov = point.z + distance;
@@ -34,10 +45,11 @@ console.log(square);
 const mesh = createMesh(doubleSquare);
 console.log(mesh);
 
+const camera = new Camera();
+
 mesh.forEach(polygon => {
     polygon.forEach(point => {
-        perspective(point, 100);
-        zoom(point, 8);
+        camera.project(point);
     });
 
     drawPolygon(polygon, context);
