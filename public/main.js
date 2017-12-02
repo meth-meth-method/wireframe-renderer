@@ -8,6 +8,10 @@ class Vec {
         this.y = y;
         this.z = z;
     }
+
+    clone() {
+        return new Vec(this.x, this.y, this.z);
+    }
 }
 
 function toPoint([x, y, z]) {
@@ -46,11 +50,15 @@ async function main() {
 
     function draw() {
         for (const polygon of mesh) {
-            for (const point of polygon) {
-                perspective(point, camera)
-                toCenter(point, canvas);
-            }
-            drawPolygon(polygon, context);
+            const projectedPolygon = polygon
+                .map(point => point.clone())
+                .map(point => {
+                    perspective(point, camera);
+                    toCenter(point, canvas);
+                    return point;
+                });
+
+            drawPolygon(projectedPolygon, context);
         }
     }
 
