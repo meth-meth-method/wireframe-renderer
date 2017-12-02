@@ -1,22 +1,7 @@
 import {cube} from './models.js';
 import {control} from './ui.js';
 import {drawPolygon} from './draw.js';
-
-class Vec {
-    constructor(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    clone() {
-        return new Vec(this.x, this.y, this.z);
-    }
-}
-
-function toPoint([x, y, z]) {
-    return new Vec(x, y, z);
-}
+import {Vec, toPoint} from './math.js';
 
 function toCenter(point, canvas) {
     point.x += canvas.width / 2;
