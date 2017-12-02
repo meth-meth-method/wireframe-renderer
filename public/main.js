@@ -32,6 +32,12 @@ function perspective(point, camera) {
     point.y *= camera.zoom;
 }
 
+function offset(vertex, pos) {
+    vertex.x -= pos.x;
+    vertex.y -= pos.y;
+    vertex.z -= pos.z;
+}
+
 async function main() {
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d');
@@ -55,6 +61,7 @@ async function main() {
             const projectedPolygon = polygon
                 .map(point => point.clone())
                 .map(point => {
+                    offset(point, camera.pos);
                     perspective(point, camera);
                     toCenter(point, canvas);
                     return point;
