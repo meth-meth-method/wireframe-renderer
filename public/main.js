@@ -1,11 +1,7 @@
 import {square} from './models.js';
 
-function toPoint(values) {
-    return {
-        x: values[0],
-        y: values[1],
-        z: values[2],
-    };
+function toPoint([x, y, z]) {
+    return {x, y, z};
 }
 
 const canvas = document.querySelector('canvas');
