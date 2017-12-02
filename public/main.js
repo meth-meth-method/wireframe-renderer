@@ -49,6 +49,8 @@ async function main() {
     };
 
     function draw() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
         for (const polygon of mesh) {
             const projectedPolygon = polygon
                 .map(point => point.clone())
