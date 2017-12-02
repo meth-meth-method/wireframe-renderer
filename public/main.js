@@ -26,11 +26,21 @@ function drawMesh(mesh, camera) {
 }
 
 function animate(time) {
-    const mesh = scene[0];
-    mesh.position.x = Math.sin(time / 1000) * 100;
-    mesh.position.z = Math.sin(time / 1200) * 100;
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
+    {
+        const mesh = scene[0];
+        mesh.position.x = Math.sin(time / 1000) * 100;
+        mesh.position.z = Math.sin(time / 1200) * 100;
+        mesh.rotation.x += 0.01;
+        mesh.rotation.y += 0.01;
+    }
+
+    {
+        const mesh = scene[1];
+        mesh.position.x = Math.sin(time / 500) * 75;
+        mesh.position.z = Math.sin(time / 2000) * 150;
+        mesh.rotation.x -= 0.01;
+        mesh.rotation.y -= 0.01;
+    }
 
     context.clearRect(0, 0, canvas.width, canvas.height);
     scene.forEach(mesh => drawMesh(mesh, camera));
