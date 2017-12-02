@@ -16,13 +16,15 @@ function createMesh(model) {
 
 function offset(point, position) {
     point.x += position.x;
+    point.y += position.y;
+    point.z += position.z;
 }
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 
 const mesh = createMesh(cube);
-mesh.position = {x: 20};
+mesh.position = {x: 20, y: 0, z: 0};
 
 const camera = new Camera();
 camera.pos.z = 200;
