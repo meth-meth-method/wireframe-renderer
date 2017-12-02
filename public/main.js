@@ -46,8 +46,9 @@ function perspective(point, camera) {
     point.x /= fov;
     point.y /= fov;
 
-    point.x *= camera.zoom;
-    point.y *= camera.zoom;
+    const zoom = Math.pow(camera.zoom, 2);
+    point.x *= zoom;
+    point.y *= zoom;
 }
 
 function offset(vertex, pos) {
@@ -70,7 +71,7 @@ async function main() {
 
     const camera = {
         pos: new Vec(0, 0, -500),
-        zoom: 500,
+        zoom: 25,
     };
 
 
