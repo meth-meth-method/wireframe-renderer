@@ -27,6 +27,9 @@ function animate(time) {
     mesh.position.x = Math.sin(time / 1000) * 100;
     mesh.position.z = Math.sin(time / 1200) * 100;
 
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.01;
+
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawMesh(mesh);
     requestAnimationFrame(animate);

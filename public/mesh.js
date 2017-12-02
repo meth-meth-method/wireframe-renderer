@@ -61,6 +61,7 @@ class Mesh {
     }
 
     transform(point) {
+        rotate(point, this.rotation);
         offset(point, this.position);
     }
 }
