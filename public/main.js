@@ -46,7 +46,7 @@ function drawMesh(mesh) {
 }
 
 function animate(time) {
-    mesh.position.x += 0.1;
+    mesh.position.x = Math.sin(time / 1000) * 100;
 
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawMesh(mesh);
