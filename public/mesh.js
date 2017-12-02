@@ -13,6 +13,7 @@ export class Mesh {
 
         this.scale = new Vec(1, 1, 1);
         this.rotation = new Vec(0, 0, 0);
+        this.position = new Vec(0, 0, 0);
     }
 
     *[Symbol.iterator]() {
@@ -24,7 +25,14 @@ export class Mesh {
     transform(point) {
         rotate(point, this.rotation);
         rescale(point, this.scale);
+        move(point, this.position);
     }
+}
+
+function move(point, position) {
+    point.x += position.x;
+    point.y += position.y;
+    point.z += position.z;
 }
 
 function rotate(point, rotation) {
