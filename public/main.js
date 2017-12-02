@@ -1,7 +1,7 @@
 import {square, doubleSquare, cube, pyramid} from './models.js';
-import {drawPolygon} from './draw.js';
 import {Camera} from './camera.js';
 import {createMesh} from './mesh.js';
+import {createWireframeRenderer} from './render.js';
 
 const canvas = document.querySelector('canvas');
 
@@ -12,27 +12,6 @@ const scene = [mesh1, mesh2];
 const camera = new Camera();
 camera.pos.z = 200;
 camera.zoom = 12;
-
-function createWireframeRenderer(canvas) {
-    const context = canvas.getContext('2d');
-
-    function drawMesh(mesh, camera) {
-        for (const polygon of mesh) {
-            polygon.forEach(point => {
-                mesh.transform(point);
-                camera.project(point);
-            });
-
-            drawPolygon(polygon, context);
-        }
-    }
-
-    return function render(scene, camera) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        scene.forEach(mesh => drawMesh(mesh, camera));
-    };
-}
 
 const render = createWireframeRenderer(canvas);
 
