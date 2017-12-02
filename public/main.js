@@ -25,6 +25,8 @@ camera.zoom = 12;
 
 mesh.forEach(polygon => {
     polygon.forEach(point => {
+        point.x += 20;
+
         camera.project(point);
     });
 
