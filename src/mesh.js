@@ -64,7 +64,7 @@ export class Mesh {
     transform() {
         return new Mesh(this.polygons.map(polygon => {
             return polygon.map(point => {
-                const out = Object.assign({}, point);
+                const out = point.clone();
                 scale(out, this.scale);
                 rotate(out, this.rotation);
                 offset(out, this.position);
