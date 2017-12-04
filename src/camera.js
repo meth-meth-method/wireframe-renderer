@@ -18,8 +18,12 @@ export class Camera {
         this.zoom = 8;
     }
 
-    project(point) {
-        perspective(point, this.pos.z);
-        zoom(point, this.zoom);
+    project(mesh) {
+        mesh.polygons.forEach(polygon => {
+            polygon.forEach(point => {
+                perspective(point, this.pos.z);
+                zoom(point, this.zoom);
+            });
+        });
     }
 }

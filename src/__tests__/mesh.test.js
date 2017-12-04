@@ -19,8 +19,8 @@ describe('Mesh', () => {
         });
     });
 
-    describe('#forEach', () => {
-        it('iterates over transformed polygon and is non-destructive', () => {
+    describe('#transform', () => {
+        it('creates a clone of mesh with transformed points', () => {
             const mesh = new createMesh([
                 [
                     [5, 7, 13],
