@@ -56,7 +56,7 @@ class Mesh {
 
     *[Symbol.iterator] () {
         for (const polygon of this.polygons) {
-            yield polygon.map(point => ({...point}));
+            yield polygon.map(point => Object.assign({}, point));
         }
     }
 
