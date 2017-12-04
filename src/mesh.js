@@ -14,6 +14,12 @@ function offset(point, position) {
     point.z += position.z;
 }
 
+function scale(point, scale) {
+    point.x *= scale.x;
+    point.y *= scale.y;
+    point.z *= scale.z;
+}
+
 function rotate(point, rotation) {
     const sin = new Vec(
         Math.sin(rotation.x),
@@ -52,12 +58,14 @@ export class Mesh {
         this.polygons = polygons;
         this.position = new Vec();
         this.rotation = new Vec();
+        this.scale = new Vec(1, 1, 1);
     }
 
     transform() {
         return new Mesh(this.polygons.map(polygon => {
             return polygon.map(point => {
                 const out = Object.assign({}, point);
+                scale(out, this.scale);
                 rotate(out, this.rotation);
                 offset(out, this.position);
                 return out;

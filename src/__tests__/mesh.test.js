@@ -40,6 +40,13 @@ describe('Mesh', () => {
             mesh.rotation.y = 5;
             expect(mesh.transform().polygons[0][0])
                 .toEqual({x: -41.04770464330467, y: 27, z: 8.482229784337633});
+
+            mesh.rotation.y = 0;
+            mesh.scale.x = 3;
+            mesh.scale.y = 2;
+            mesh.scale.z = 0.5;
+            expect(mesh.transform().polygons[0][0])
+                .toEqual({x: -15, y: 34, z: 6.5});
         });
     });
 });
