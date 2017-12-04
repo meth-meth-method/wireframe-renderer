@@ -16,12 +16,9 @@ export function drawPolygon(polygon, context) {
 }
 
 export function drawMesh(mesh, camera, context) {
-    mesh.map(polygon => {
-        polygon.forEach(point => {
-            mesh.transform(polygon);
-            camera.project(polygon);
-        });
-        console.log(polygon[0]);
+    const transformed = mesh.transform();
+    camera.project(transformed);
+    transformed.polygons.forEach(polygon => {
         drawPolygon(polygon, context);
     });
 }
