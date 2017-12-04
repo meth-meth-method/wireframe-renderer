@@ -16,9 +16,9 @@ export function drawPolygon(polygon, context) {
 }
 
 export function drawMesh(mesh, camera, context) {
-    const transformed = mesh.transform();
-    camera.project(transformed);
-    transformed.polygons.forEach(polygon => {
+    const polygons = mesh.transform();
+    camera.project(polygons);
+    polygons.forEach(polygon => {
         drawPolygon(polygon, context);
     });
 }

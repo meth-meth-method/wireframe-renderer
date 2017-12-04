@@ -19,8 +19,8 @@ describe('Mesh', () => {
         });
     });
 
-    describe('#transform', () => {
-        it('creates a clone of mesh with transformed points', () => {
+    describe('#project', () => {
+        it('returns polygons  a clone of mesh with transformed points', () => {
             const mesh = new createMesh([
                 [
                     [5, 7, 13],
@@ -29,23 +29,23 @@ describe('Mesh', () => {
 
             mesh.position.x = 20;
             mesh.position.y = 10;
-            expect(mesh.transform().polygons[0][0])
+            expect(mesh.transform()[0][0])
                 .toEqual({x: 25, y: 17, z: 13});
 
             mesh.position.x = -30;
             mesh.position.y = 20;
-            expect(mesh.transform().polygons[0][0])
+            expect(mesh.transform()[0][0])
                 .toEqual({x: -25, y: 27, z: 13});
 
             mesh.rotation.y = 5;
-            expect(mesh.transform().polygons[0][0])
+            expect(mesh.transform()[0][0])
                 .toEqual({x: -41.04770464330467, y: 27, z: 8.482229784337633});
 
             mesh.rotation.y = 0;
             mesh.scale.x = 3;
             mesh.scale.y = 2;
             mesh.scale.z = 0.5;
-            expect(mesh.transform().polygons[0][0])
+            expect(mesh.transform()[0][0])
                 .toEqual({x: -15, y: 34, z: 6.5});
         });
     });

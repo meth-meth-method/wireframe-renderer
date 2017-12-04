@@ -62,14 +62,15 @@ export class Mesh {
     }
 
     transform() {
-        return new Mesh(this.polygons.map(polygon => {
-            return polygon.map(point => {
-                const out = point.clone();
-                scale(out, this.scale);
-                rotate(out, this.rotation);
-                offset(out, this.position);
-                return out;
-            });
-        }));
+        return this.polygons.map(polygon => {
+            return polygon
+                .map(point => point.clone())
+                .map(point => {
+                    scale(point, this.scale);
+                    rotate(point, this.rotation);
+                    offset(point, this.position);
+                    return point;
+                });
+        });
     }
 }
