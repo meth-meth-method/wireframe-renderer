@@ -54,16 +54,6 @@ export class Mesh {
         this.rotation = new Vec();
     }
 
-    forEach(callback) {
-        for (const polygon of this.polygons) {
-            callback(polygon.map(point => {
-                const out = Object.assign({}, point);
-                this.transform_(out);
-                return out;
-            }));
-        }
-    }
-
     transform() {
         let polys = [];
         for (const polygon of this.polygons) {
