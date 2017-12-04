@@ -58,13 +58,25 @@ export class Mesh {
         for (const polygon of this.polygons) {
             callback(polygon.map(point => {
                 const out = Object.assign({}, point);
-                this.transform(out);
+                this.transform_(out);
                 return out;
             }));
         }
     }
 
-    transform(point) {
+    transform() {
+        let polys = [];
+        for (const polygon of this.polygons) {
+            polys.push(polygon.map(point => {
+                const out = Object.assign({}, point);
+                this.transform_(out);
+                return out;
+            }));
+        }
+        return new Mesh(polys);
+    }
+
+    transform_(point) {
         rotate(point, this.rotation);
         offset(point, this.position);
     }

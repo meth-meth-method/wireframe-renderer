@@ -27,28 +27,19 @@ describe('Mesh', () => {
                 ]
             ]);
 
-            let polys = [];
             mesh.position.x = 20;
             mesh.position.y = 10;
-            mesh.forEach(poly => {
-                polys.push(poly);
-            });
-            expect(polys[0][0]).toEqual({x: 25, y: 17, z: 13});
+            expect(mesh.transform().polygons[0][0])
+                .toEqual({x: 25, y: 17, z: 13});
 
-            polys = [];
             mesh.position.x = -30;
             mesh.position.y = 20;
-            mesh.forEach(poly => {
-                polys.push(poly);
-            });
-            expect(polys[0][0]).toEqual({x: -25, y: 27, z: 13});
+            expect(mesh.transform().polygons[0][0])
+                .toEqual({x: -25, y: 27, z: 13});
 
-            polys = [];
             mesh.rotation.y = 5;
-            mesh.forEach(poly => {
-                polys.push(poly);
-            });
-            expect(polys[0][0]).toEqual({x: -41.04770464330467, y: 27, z: 8.482229784337633});
+            expect(mesh.transform().polygons[0][0])
+                .toEqual({x: -41.04770464330467, y: 27, z: 8.482229784337633});
         });
     });
 });
