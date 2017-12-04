@@ -14,8 +14,8 @@ function zoom(point, factor) {
 
 export class Camera {
     constructor() {
-        this.pos = new Vec(0, 0, 100);
-        this.zoom = 8;
+        this.pos = new Vec(0, 0, 400);
+        this.zoom = 16;
     }
 
     project(mesh) {

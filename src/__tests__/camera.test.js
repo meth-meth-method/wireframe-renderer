@@ -13,7 +13,7 @@ describe('Camera', () => {
 
             camera.project(mesh);
 
-            expect(mesh.polygons[0][0]).toEqual({x: 0.6213592233009708, y: 1.2427184466019416, z: 3});
+            expect(mesh.polygons[0][0]).toEqual({x: 0.6352357320099256, y: 1.2704714640198511, z: 3});
         });
     });
 });
