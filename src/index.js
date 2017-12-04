@@ -1,8 +1,11 @@
 import {Camera} from './camera.js';
-import {Mesh, createMesh} from './camera.js';
+import {drawMesh, drawPolygon} from './draw.js';
+import {Mesh, createMesh} from './mesh.js';
 
 export {
     Camera,
-    Mesh,
     createMesh,
+    drawMesh,
+    drawPolygon,
+    Mesh,
 }

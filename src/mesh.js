@@ -1,9 +1,5 @@
 import {Vec} from './math.js';
 
-export function createMesh(model) {
-    return new Mesh(model.map(toPolygon));
-}
-
 function toPoint([x, y, z]) {
     return new Vec(x, y, z);
 }
@@ -47,16 +43,24 @@ function rotate(point, rotation) {
     point.y = temp2;
 }
 
-class Mesh {
+export function createMesh(model) {
+    return new Mesh(model.map(toPolygon));
+}
+
+export class Mesh {
     constructor(polygons) {
         this.polygons = polygons;
         this.position = new Vec();
         this.rotation = new Vec();
     }
 
-    *[Symbol.iterator] () {
+    forEach(callback) {
         for (const polygon of this.polygons) {
-            yield polygon.map(point => Object.assign({}, point));
+            callback(polygon.map(point => {
+                const out = Object.assign({}, point);
+                this.transform(out);
+                return out;
+            }));
         }
     }
 

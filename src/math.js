@@ -4,4 +4,8 @@ export class Vec {
         this.y = y;
         this.z = z;
     }
+
+    clone() {
+        return new Vec(this.x, this.y, this.z);
+    }
 }
