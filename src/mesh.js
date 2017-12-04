@@ -55,15 +55,13 @@ export class Mesh {
     }
 
     transform() {
-        let polys = [];
-        for (const polygon of this.polygons) {
-            polys.push(polygon.map(point => {
+        return new Mesh(this.polygons.map(polygon => {
+            return polygon.map(point => {
                 const out = Object.assign({}, point);
                 rotate(out, this.rotation);
                 offset(out, this.position);
                 return out;
-            }));
-        }
-        return new Mesh(polys);
+            });
+        }));
     }
 }
