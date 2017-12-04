@@ -1,7 +1,7 @@
 {
   "name": "@pomle/micro-project",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "A tiny library for transforming and projecting 3d objects.",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel ./src --out-dir ./dist",
